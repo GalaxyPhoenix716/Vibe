@@ -176,7 +176,6 @@ class BgImage extends StatelessWidget {
         borderRadius: BorderRadius.circular(200),
         child: Image(
           image: AssetImage('lib/core/images/auth_screen_image.jpg'),
-          
         ),
       ),
     );
