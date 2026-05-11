@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:vibe/core/theme/app_colors.dart';
 import 'package:vibe/feature/auth/view/widgets/signup_button.dart';
 
-class SignupPage extends StatelessWidget {
-  const SignupPage({super.key});
+class AuthPage extends StatelessWidget {
+  const AuthPage({super.key});
 
   @override
   Widget build(BuildContext context) {
