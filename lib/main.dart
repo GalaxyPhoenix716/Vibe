@@ -1,23 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vibe/core/services/supabase_service.dart';
 import 'package:vibe/core/theme/theme.dart';
 import 'package:vibe/feature/auth/view/pages/auth_page.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Load .env
+  await dotenv.load(fileName: ".env");
+
+  // Initialize Supabase
+  await SupabaseService.init();
+
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Vibe',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.darkMode,
       home: const AuthPage(),
     );
   }
 }
-
