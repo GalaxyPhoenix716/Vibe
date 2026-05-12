@@ -14,6 +14,8 @@ dependencies:
   font_awesome_flutter: ^11.0.0
   supabase_flutter: ^2.12.4
   flutter_dotenv: ^6.0.1
+  flutter_riverpod: ^3.3.1
+  http: ^1.6.0
 
 dev_dependencies:
   flutter_test:
@@ -27,6 +29,7 @@ flutter:
   assets:
     - lib/core/images/
     - lib/core/fonts/
+    - .env
 
   fonts:
     - family: SF Pro
