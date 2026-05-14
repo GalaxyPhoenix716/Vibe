@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 import 'package:vibe/core/theme/app_colors.dart';
-
-import '../../provider/auth_provider.dart';
+import '../../viewmodel/auth_viewmodel.dart';
 
 class SignUpButton extends ConsumerWidget {
   const SignUpButton({super.key});
