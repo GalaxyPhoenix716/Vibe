@@ -12,7 +12,7 @@ AuthRepository authRepository(Ref ref) {
 class AuthViewModel extends _$AuthViewModel {
   @override
   Future<UserModel?> build() async {
-    final repository = ref.read(authRepositoryProvider);
+    final repository = ref.watch(authRepositoryProvider);
 
     if (!repository.isLoggedIn) {
       return null;
