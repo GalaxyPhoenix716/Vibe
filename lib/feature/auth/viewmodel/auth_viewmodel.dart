@@ -1,3 +1,5 @@
+import 'dart:developer' as dev;
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../model/user_model.dart';
 import '../repositories/auth_repository.dart';
@@ -18,14 +20,17 @@ class AuthViewModel extends _$AuthViewModel {
       return null;
     }
 
-    return repository.fetchCurrentUser();
+    final user = await repository.fetchCurrentUser();
+    return user;
   }
 
   Future<void> loginWithGoogle() async {
     final repository = ref.read(authRepositoryProvider);
     await repository.signInWithGoogle();
     state = const AsyncLoading();
-    state = await AsyncValue.guard(repository.fetchCurrentUser);
+    state = await AsyncValue.guard(
+      repository.fetchCurrentUser,
+    ); //handles try catch -> if success then it will do AsyncData(user) or else it will do Asyncerror(errror)
   }
 
   Future<void> logout() async {

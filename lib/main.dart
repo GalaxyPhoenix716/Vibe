@@ -3,15 +3,15 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vibe/core/services/supabase_service.dart';
 import 'package:vibe/core/theme/theme.dart';
-import 'package:vibe/feature/auth/view/pages/auth_page.dart';
+import 'package:vibe/feature/auth/view/pages/auth_wrapper.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Load .env
+  //load .env
   await dotenv.load(fileName: ".env");
 
-  // Initialize Supabase
+  //initialize supabase
   await SupabaseService.init();
 
   runApp(const ProviderScope(child: MyApp()));
@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
       title: 'Vibe',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.darkMode,
-      home: const AuthPage(),
+      home: const AuthWrapper(),
     );
   }
 }

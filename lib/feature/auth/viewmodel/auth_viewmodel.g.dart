@@ -48,7 +48,7 @@ final class AuthRepositoryProvider
   }
 }
 
-String _$authRepositoryHash() => r'e3b22fd7863ea1be0b322870da43112c60f80087';
+String _$authRepositoryHash() => r'19a3485653561ac2f781b997131430c5659286d1';
 
 @ProviderFor(AuthViewModel)
 final authViewModelProvider = AuthViewModelProvider._();
@@ -74,7 +74,7 @@ final class AuthViewModelProvider
   AuthViewModel create() => AuthViewModel();
 }
 
-String _$authViewModelHash() => r'7a59713e278f8c9488bafc60a54fc4b85181009f';
+String _$authViewModelHash() => r'1a61fff6ca766998a3229837a89d2b56db24841d';
 
 abstract class _$AuthViewModel extends $AsyncNotifier<UserModel?> {
   FutureOr<UserModel?> build();
