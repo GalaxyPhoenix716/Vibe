@@ -12,7 +12,6 @@ class SignUpButton extends ConsumerWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(50),
-
         gradient: LinearGradient(
           colors: [VibeColors.deepBlue, VibeColors.brighPurple],
         ),
@@ -25,17 +24,13 @@ class SignUpButton extends ConsumerWidget {
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
         ),
-
         onPressed: () async {
           await ref.read(authViewModelProvider.notifier).loginWithGoogle();
         },
-
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
-
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
-
             children: [
               FaIcon(FontAwesomeIcons.google, color: VibeColors.white),
 
@@ -43,7 +38,6 @@ class SignUpButton extends ConsumerWidget {
 
               Text(
                 "Sign Up with Google",
-
                 style: TextStyle(fontSize: 18, color: VibeColors.text),
               ),
             ],
