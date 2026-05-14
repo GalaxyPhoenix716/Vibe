@@ -1,31 +1,36 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod/legacy.dart';
-import 'package:vibe/feature/auth/repositories/auth_repository.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import '../model/user_model.dart';
+import '../repositories/auth_repository.dart';
+part 'auth_viewmodel.g.dart';
 
-final authRepositoryProvider = Provider<AuthRepository>((ref) {
+@riverpod
+AuthRepository authRepository(Ref ref) {
   return AuthRepository();
-});
+}
 
-final authViewModelProvider =
-    StateNotifierProvider<AuthViewModel, Map<String, dynamic>?>((ref) {
-      return AuthViewModel(ref.watch(authRepositoryProvider));
-    });
+@riverpod
+class AuthViewModel extends _$AuthViewModel {
+  @override
+  Future<UserModel?> build() async {
+    final repository = ref.read(authRepositoryProvider);
 
-class AuthViewModel extends StateNotifier<Map<String, dynamic>?> {
-  final AuthRepository repository;
+    if (!repository.isLoggedIn) {
+      return null;
+    }
 
-  AuthViewModel(this.repository) : super(null);
-
-  bool get isLoggedIn => repository.isLoggedIn;
+    return repository.fetchCurrentUser();
+  }
 
   Future<void> loginWithGoogle() async {
+    final repository = ref.read(authRepositoryProvider);
     await repository.signInWithGoogle();
-    final user = await repository.loginToBackend();
-    state = user;
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(repository.fetchCurrentUser);
   }
 
   Future<void> logout() async {
+    final repository = ref.read(authRepositoryProvider);
     await repository.signOut();
-    state = null;
+    state = const AsyncData(null);
   }
 }

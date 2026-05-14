@@ -1,22 +1,30 @@
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../core/services/api_service.dart';
+import '../model/user_model.dart';
 
 class AuthRepository {
+  AuthRepository();
+
   final supabase = Supabase.instance.client;
 
   Future<void> signInWithGoogle() async {
     await supabase.auth.signInWithOAuth(
       OAuthProvider.google,
-      redirectTo: 'io.supabase.flutter://login-callback/',
+      redirectTo: kIsWeb ? null : 'io.supabase.flutter://login-callback/',
     );
   }
 
-  Future<Map<String, dynamic>?> loginToBackend() async {
+  Future<UserModel?> fetchCurrentUser() async {
     final token = supabase.auth.currentSession?.accessToken;
 
-    if (token == null) return null;
+    if (token == null) {
+      return null;
+    }
 
-    return await ApiService.login(token);
+    final response = await ApiService.login(token);
+
+    return UserModel.fromJson(response['user']);
   }
 
   bool get isLoggedIn => supabase.auth.currentSession != null;
