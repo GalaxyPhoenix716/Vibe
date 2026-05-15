@@ -18,6 +18,7 @@ dependencies:
   http: ^1.6.0
   riverpod_annotation: ^4.0.2
   awesome_snackbar_content: ^0.1.8
+  palette_generator_master: ^1.1.0
 
 dev_dependencies:
   flutter_test:
