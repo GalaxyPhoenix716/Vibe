@@ -1,5 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:vibe/core/constants.dart';
+import 'package:vibe/core/theme/app_colors.dart';
 import 'package:vibe/core/widgets/adaptive_background.dart';
 
 class MusicUploadPage extends StatefulWidget {
@@ -13,6 +15,7 @@ class _MusicUploadPageState extends State<MusicUploadPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: Stack(
         children: [
           //Background Gradient
@@ -26,18 +29,31 @@ class _MusicUploadPageState extends State<MusicUploadPage> {
 
           //Main widgets
           SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  width: double.infinity,
-                  height: MediaQuery.of(context).size.height * 0.45,
-                  alignment: Alignment.center,
-                  child: Text('Select Image'),
-                ),
-                const SizedBox(height: 15),
-                Container(),
-              ],
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: VibePadding.horizontalPadding,
+                vertical: VibePadding.verticalPadding,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    width: double.infinity,
+                    height:
+                        MediaQuery.of(context).size.width -
+                        (2 * VibePadding.horizontalPadding),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: VibeColors.card,
+                      border: Border.all(width: 2, color: VibeColors.card),
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Text('Select Image'),
+                  ),
+                  const SizedBox(height: 15),
+                  Container(),
+                ],
+              ),
             ),
           ),
         ],
@@ -45,5 +61,3 @@ class _MusicUploadPageState extends State<MusicUploadPage> {
     );
   }
 }
-
-
