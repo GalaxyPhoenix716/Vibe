@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:vibe/core/theme/app_colors.dart';
 import 'package:vibe/core/utils.dart';
 import '../model/upload_state.dart';
 
@@ -21,7 +22,10 @@ class UploadViewModel extends _$UploadViewModel {
 
     final dominantColor = await generatePalette(FileImage(image));
 
-    state = state.copyWith(coverImage: image, dominantColor: dominantColor);
+    state = state.copyWith(
+      coverImage: () => image,
+      dominantColor: dominantColor,
+    );
   }
 
   Future<void> selectAudioFile() async {
@@ -31,15 +35,18 @@ class UploadViewModel extends _$UploadViewModel {
       return;
     }
 
-    state = state.copyWith(audioFile: audio);
+    state = state.copyWith(audioFile: () => audio);
   }
 
   void removeCoverImage() {
-    state = state.copyWith(coverImage: null, dominantColor: Colors.black);
+    state = state.copyWith(
+      coverImage: () => null,
+      dominantColor: VibeColors.backgroundColor,
+    );
   }
 
   void removeAudioFile() {
-    state = state.copyWith(audioFile: null);
+    state = state.copyWith(audioFile: () => null);
   }
 
   Future<void> uploadSong({
