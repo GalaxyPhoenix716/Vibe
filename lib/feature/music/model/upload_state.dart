@@ -15,14 +15,14 @@ class UploadState {
   });
 
   UploadState copyWith({
-    File? coverImage,
-    File? audioFile,
+    ValueGetter<File?>? coverImage,
+    ValueGetter<File?>? audioFile,
     Color? dominantColor,
     bool? isUploading,
   }) {
     return UploadState(
-      coverImage: coverImage ?? this.coverImage,
-      audioFile: audioFile ?? this.audioFile,
+      coverImage: coverImage != null ? coverImage() : this.coverImage,
+      audioFile: audioFile != null ? audioFile() : this.audioFile,
       dominantColor: dominantColor ?? this.dominantColor,
       isUploading: isUploading ?? this.isUploading,
     );
