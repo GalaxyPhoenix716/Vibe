@@ -16,7 +16,7 @@ class AdaptiveBackground extends ConsumerWidget {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [VibeColors.backgroundColor, dominantColor.withValues(alpha: 0.3), dominantColor.withValues(alpha: 0.5)],
+            colors: [VibeColors.backgroundColor, dominantColor.withValues(alpha: 0.4), dominantColor.withValues(alpha: 0.6), dominantColor.withValues(alpha: 0.8)],
           ),
         ),
       ),
