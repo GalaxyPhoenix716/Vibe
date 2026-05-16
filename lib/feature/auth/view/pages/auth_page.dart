@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:vibe/core/constants.dart';
 import 'package:vibe/core/theme/app_colors.dart';
 import 'package:vibe/feature/auth/view/widgets/signup_button.dart';
 
@@ -19,7 +20,9 @@ class AuthPage extends StatelessWidget {
             Expanded(
               flex: 2,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: VibePadding.horizontalPadding,
+                ),
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
