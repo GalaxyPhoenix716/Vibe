@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:palette_generator_master/palette_generator_master.dart';
@@ -40,17 +43,35 @@ Future<Color> generatePalette() async {
         generateHarmony: true, // Generate color harmony
       );
 
-  // Access extracted colors
   final Color? dominantColor = paletteGenerator.dominantColor?.color;
-  // final Color? vibrantColor = paletteGenerator.vibrantColor?.color;
-  // final Color? mutedColor = paletteGenerator.mutedColor?.color;
 
-  // // Get all extracted colors
-  // final List<PaletteColorMaster> allColors = paletteGenerator.paletteColors;
-
-  // // Get harmony colors
-  // final List<ColorHarmonyMaster> harmonyColors = paletteGenerator.harmonyColors;
-
-  // Use colors in your UI
   return dominantColor!;
+}
+
+Future<File?> pickAudio() async {
+  try {
+    final filePickerRes = await FilePicker.pickFiles(type: FileType.audio);
+
+    if (filePickerRes != null) {
+      return File(filePickerRes.files.first.xFile.path);
+    }
+
+    return null;
+  } catch (e) {
+    return null;
+  }
+}
+
+Future<File?> pickImage() async {
+  try {
+    final filePickerRes = await FilePicker.pickFiles(type: FileType.image);
+
+    if (filePickerRes != null) {
+      return File(filePickerRes.files.first.xFile.path);
+    }
+
+    return null;
+  } catch (e) {
+    return null;
+  }
 }
