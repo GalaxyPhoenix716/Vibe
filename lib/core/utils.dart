@@ -33,9 +33,7 @@ void showSnackbar(
     ..showSnackBar(snackbar);
 }
 
-Future<Color> generatePalette() async {
-  final ImageProvider imageProvider = AssetImage('lib/core/images/img.png');
-
+Future<Color> generatePalette(ImageProvider imageProvider) async {
   final PaletteGeneratorMaster paletteGenerator =
       await PaletteGeneratorMaster.fromImageProvider(
         imageProvider,
