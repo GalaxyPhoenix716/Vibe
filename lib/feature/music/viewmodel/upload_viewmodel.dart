@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vibe/core/theme/app_colors.dart';
 import 'package:vibe/core/utils.dart';
+import 'package:vibe/feature/music/repositories/music_repository.dart';
 import '../model/upload_state.dart';
 
 part 'upload_viewmodel.g.dart';
 
 @riverpod
 class UploadViewModel extends _$UploadViewModel {
+  late MusicRepository _musicRepository;
   @override
   UploadState build() {
+    _musicRepository = ref.watch(MusicRepositoryProvider);
     return const UploadState(dominantColor: Colors.black);
   }
 
@@ -72,7 +75,13 @@ class UploadViewModel extends _$UploadViewModel {
     state = state.copyWith(isUploading: true);
 
     try {
-      // upload repository logic later
+      _musicRepository.uploadSong(
+        audio: state.audioFile!,
+        image: state.coverImage!,
+        artist: artistName,
+        songName: songName,
+        token: token,
+      );
     } finally {
       state = state.copyWith(isUploading: false);
     }
