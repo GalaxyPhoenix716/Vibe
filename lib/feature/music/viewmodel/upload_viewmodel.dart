@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vibe/core/theme/app_colors.dart';
 import 'package:vibe/core/utils.dart';
+import 'package:vibe/feature/auth/viewmodel/auth_viewmodel.dart';
 import 'package:vibe/feature/music/repositories/music_repository.dart';
 import '../model/upload_state.dart';
 
@@ -9,10 +10,8 @@ part 'upload_viewmodel.g.dart';
 
 @riverpod
 class UploadViewModel extends _$UploadViewModel {
-  late MusicRepository _musicRepository;
   @override
   UploadState build() {
-    _musicRepository = ref.watch(MusicRepositoryProvider);
     return const UploadState(dominantColor: Colors.black);
   }
 
@@ -52,7 +51,7 @@ class UploadViewModel extends _$UploadViewModel {
     state = state.copyWith(audioFile: () => null);
   }
 
-  Future<void> uploadSong({
+  Future<String> uploadSong({
     required String songName,
     required String artistName,
   }) async {
@@ -75,12 +74,29 @@ class UploadViewModel extends _$UploadViewModel {
     state = state.copyWith(isUploading: true);
 
     try {
-      _musicRepository.uploadSong(
+      final repository = ref.read(musicRepositoryProvider);
+      final token = ref.read(authRepositoryProvider).token;
+
+      if (token == null) {
+        throw Exception('User not authenticated');
+      }
+
+      final result = await repository.uploadSong(
         audio: state.audioFile!,
         image: state.coverImage!,
         artist: artistName,
         songName: songName,
         token: token,
+      );
+
+      return result.fold(
+        (failure) {
+          throw Exception(failure.message);
+        },
+
+        (success) {
+          return success;
+        },
       );
     } finally {
       state = state.copyWith(isUploading: false);

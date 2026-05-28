@@ -29,6 +29,8 @@ class AuthRepository {
 
   bool get isLoggedIn => supabase.auth.currentSession != null;
 
+  String? get token => supabase.auth.currentSession?.accessToken;
+
   Future<void> signOut() async {
     await supabase.auth.signOut();
   }
