@@ -13,7 +13,7 @@ class SignUpButton extends ConsumerWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(50),
         gradient: LinearGradient(
-          colors: [VibeColors.deepBlue, VibeColors.brighPurple],
+          colors: [VibeColors.deepBlue, VibeColors.brightPurple],
         ),
       ),
 

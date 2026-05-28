@@ -172,7 +172,7 @@ class BgImage extends StatelessWidget {
     return Container(
       width: MediaQuery.sizeOf(context).width * 0.77,
       decoration: BoxDecoration(
-        color: VibeColors.brighPurple,
+        color: VibeColors.brightPurple,
         borderRadius: BorderRadius.circular(200),
       ),
       child: ClipRRect(

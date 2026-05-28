@@ -103,7 +103,6 @@ class UploadViewModel extends _$UploadViewModel {
         (failure) {
           throw Exception(failure.message);
         },
-
         (success) {
           return success;
         },
@@ -111,5 +110,9 @@ class UploadViewModel extends _$UploadViewModel {
     } finally {
       state = state.copyWith(isUploading: false);
     }
+  }
+
+  void resetState() {
+    state = const UploadState(dominantColor: Colors.black);
   }
 }

@@ -6,14 +6,14 @@ class UploadState {
   final File? audioFile;
   final Duration? audioDuration;
   final Color dominantColor;
-  final bool? isUploading;
+  final bool isUploading;
 
   const UploadState({
     this.coverImage,
     this.audioFile,
     this.audioDuration,
     required this.dominantColor,
-    this.isUploading,
+    this.isUploading = false,
   });
 
   UploadState copyWith({

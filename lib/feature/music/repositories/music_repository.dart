@@ -37,13 +37,15 @@ class MusicRepository {
 
       final response = await request.send();
 
-      if (response.statusCode >= 400) {
-        return Left(AppFailure(await response.stream.bytesToString()));
+      final responseBody = await response.stream.bytesToString();
+
+      final data = jsonDecode(responseBody);
+
+      if (response.statusCode != 201) {
+        return Left(AppFailure(data['detail'] ?? 'Upload failed'));
       }
 
-      final decodedBody = jsonDecode(await response.stream.bytesToString());
-
-      return Right(decodedBody['message']);
+      return Right(data['message']);
     } catch (e) {
       return Left(AppFailure(e.toString()));
     }
