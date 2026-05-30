@@ -5,6 +5,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vibe/core/constants.dart';
 import 'package:vibe/core/failure/failure.dart';
+import 'package:vibe/feature/home/model/song_model.dart';
 
 part 'music_repository.g.dart';
 
@@ -36,9 +37,7 @@ class MusicRepository {
         ..headers.addAll({'Authorization': 'Bearer $token'});
 
       final response = await request.send();
-
       final responseBody = await response.stream.bytesToString();
-
       final data = jsonDecode(responseBody);
 
       if (response.statusCode != 201) {
@@ -46,6 +45,37 @@ class MusicRepository {
       }
 
       return Right(data['message']);
+    } catch (e) {
+      return Left(AppFailure(e.toString()));
+    }
+  }
+
+  Future<Either<AppFailure, List<SongModel>>> getAllSongs({
+    required String token,
+  }) async {
+    try {
+      final res = await http.get(
+        Uri.parse('${ServerConstant.serverURL}/song/list'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+      var resBodyMap = jsonDecode(res.body);
+
+      if (res.statusCode != 200) {
+        resBodyMap = resBodyMap as Map<String, dynamic>;
+        return Left(AppFailure(resBodyMap['detail']));
+      }
+
+      resBodyMap = resBodyMap as List;
+      List<SongModel> songs = [];
+
+      for (final map in resBodyMap) {
+        songs.add(SongModel.fromMap(map));
+      }
+
+      return Right(songs);
     } catch (e) {
       return Left(AppFailure(e.toString()));
     }
