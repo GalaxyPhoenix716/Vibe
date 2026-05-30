@@ -4,10 +4,28 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vibe/core/theme/app_colors.dart';
 import 'package:vibe/core/utils.dart';
 import 'package:vibe/feature/auth/viewmodel/auth_viewmodel.dart';
+import 'package:vibe/feature/home/model/song_model.dart';
 import 'package:vibe/feature/music/repositories/music_repository.dart';
 import '../model/upload_state.dart';
 
 part 'upload_viewmodel.g.dart';
+
+@riverpod
+Future<List<SongModel>> getAllSongs(Ref ref) async {
+  final token = ref.read(authRepositoryProvider).token!;
+  final res = await ref
+      .watch(musicRepositoryProvider)
+      .getAllSongs(token: token);
+
+  return res.fold(
+    (failure) {
+      throw Exception(failure.message);
+    },
+    (success) {
+      return success;
+    },
+  );
+}
 
 @riverpod
 class UploadViewModel extends _$UploadViewModel {

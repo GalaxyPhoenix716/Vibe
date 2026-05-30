@@ -49,4 +49,4 @@ final class MusicRepositoryProvider
   }
 }
 
-String _$musicRepositoryHash() => r'82f237f9968f99b1be1232845a6a43f8cd1efecf';
+String _$musicRepositoryHash() => r'22554a061312b47a1dc7d4eba15a5d8de66bdb07';
