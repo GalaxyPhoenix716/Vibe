@@ -20,6 +20,7 @@ class MusicRepository {
     required File image,
     required String artist,
     required String songName,
+    required String tags,
     required String token,
   }) async {
     try {
@@ -33,7 +34,7 @@ class MusicRepository {
           await http.MultipartFile.fromPath('song_audio', audio.path),
           await http.MultipartFile.fromPath('thumbnail', image.path),
         ])
-        ..fields.addAll({'artist': artist, 'song_name': songName})
+        ..fields.addAll({'artist': artist, 'song_name': songName, 'tags': tags})
         ..headers.addAll({'Authorization': 'Bearer $token'});
 
       final response = await request.send();

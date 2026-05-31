@@ -82,6 +82,7 @@ class UploadViewModel extends _$UploadViewModel {
   Future<String> uploadSong({
     required String songName,
     required String artistName,
+    required String tags,
   }) async {
     if (state.coverImage == null) {
       throw Exception('Please select a cover image');
@@ -114,6 +115,7 @@ class UploadViewModel extends _$UploadViewModel {
         image: state.coverImage!,
         artist: artistName,
         songName: songName,
+        tags: tags,
         token: token,
       );
 
