@@ -2,13 +2,13 @@
 import 'dart:convert';
 
 class SongModel {
-  final String idd;
+  final String id;
   final String song_name;
   final String artist;
   final String thumbnail_url;
   final String song_url;
   SongModel({
-    required this.idd,
+    required this.id,
     required this.song_name,
     required this.artist,
     required this.thumbnail_url,
@@ -16,14 +16,14 @@ class SongModel {
   });
 
   SongModel copyWith({
-    String? idd,
+    String? id,
     String? song_name,
     String? artist,
     String? thumbnail_url,
     String? song_url,
   }) {
     return SongModel(
-      idd: idd ?? this.idd,
+      id: id ?? this.id,
       song_name: song_name ?? this.song_name,
       artist: artist ?? this.artist,
       thumbnail_url: thumbnail_url ?? this.thumbnail_url,
@@ -33,7 +33,7 @@ class SongModel {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'idd': idd,
+      'idd': id,
       'song_name': song_name,
       'artist': artist,
       'thumbnail_url': thumbnail_url,
@@ -43,7 +43,7 @@ class SongModel {
 
   factory SongModel.fromMap(Map<String, dynamic> map) {
     return SongModel(
-      idd: map['idd'] as String,
+      id: map['id'] as String,
       song_name: map['song_name'] as String,
       artist: map['artist'] as String,
       thumbnail_url: map['thumbnail_url'] as String,
@@ -57,7 +57,7 @@ class SongModel {
 
   @override
   String toString() {
-    return 'SongModel(idd: $idd, song_name: $song_name, artist: $artist, thumbnail_url: $thumbnail_url, song_url: $song_url)';
+    return 'SongModel(idd: $id, song_name: $song_name, artist: $artist, thumbnail_url: $thumbnail_url, song_url: $song_url)';
   }
 
   @override
@@ -65,7 +65,7 @@ class SongModel {
     if (identical(this, other)) return true;
   
     return 
-      other.idd == idd &&
+      other.id == id &&
       other.song_name == song_name &&
       other.artist == artist &&
       other.thumbnail_url == thumbnail_url &&
@@ -74,7 +74,7 @@ class SongModel {
 
   @override
   int get hashCode {
-    return idd.hashCode ^
+    return id.hashCode ^
       song_name.hashCode ^
       artist.hashCode ^
       thumbnail_url.hashCode ^
