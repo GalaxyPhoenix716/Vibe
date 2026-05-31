@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:vibe/core/constants.dart';
 import 'package:vibe/feature/home/model/song_model.dart';
 
 class PlaylistModel {
@@ -11,40 +14,81 @@ class PlaylistModel {
     required this.songs,
   });
 
+  String generatePlaylistName(List<String> tags) {
+    final Random random = Random();
+    final normalizedTags = tags.map((e) => e.trim().toLowerCase()).toList();
+
+    final moodPool = <String>[];
+    final genrePool = <String>[];
+
+    for (final tag in normalizedTags) {
+      moodPool.addAll(PlaylistWords.moodWords[tag] ?? []);
+      genrePool.addAll(PlaylistWords.genreWords[tag] ?? []);
+    }
+
+    if (moodPool.isNotEmpty && genrePool.isNotEmpty) {
+      return '${moodPool[random.nextInt(moodPool.length)]} '
+          '${genrePool[random.nextInt(genrePool.length)]}';
+    }
+
+    if (moodPool.isNotEmpty) {
+      return '${moodPool[random.nextInt(moodPool.length)]} '
+          '${PlaylistWords.fallbackWords[random.nextInt(PlaylistWords.fallbackWords.length)]}';
+    }
+
+    if (genrePool.isNotEmpty) {
+      return '${genrePool[random.nextInt(genrePool.length)]} '
+          '${PlaylistWords.fallbackWords[random.nextInt(PlaylistWords.fallbackWords.length)]}';
+    }
+
+    return 'Daily Mix';
+  }
+
   List<PlaylistModel> generatePlaylists(List<SongModel> songs) {
-    if (songs.isEmpty) {
+    if (songs.length < 5) {
       return [];
     }
 
-    final playlistInfo = [
-      ('Trending Now', 'Most played tracks'),
-      ('Fresh Uploads', 'Recently added music'),
-      ('Late Night Vibes', 'Perfect for the night'),
-      ('Workout Mix', 'High energy tracks'),
-      ('Chill Session', 'Relax and unwind'),
-      ('Road Trip', 'Music for the journey'),
-      ('Daily Mix', 'Handpicked for you'),
-      ('Hidden Gems', 'Discover something new'),
-    ];
-
+    final shuffled = [...songs]..shuffle();
     final playlists = <PlaylistModel>[];
+    final usedNames = <String>{};
 
-    for (final (name, description) in playlistInfo) {
-      final shuffled = [...songs]..shuffle();
-
+    int currentIndex = 0;
+    for (int i = 0; i < 8; i++) {
       final playlistSongs = <SongModel>[];
 
       while (playlistSongs.length < 5) {
-        playlistSongs.addAll(shuffled);
+        playlistSongs.add(shuffled[currentIndex % shuffled.length]);
+
+        currentIndex++;
       }
 
-      playlistSongs.shuffle();
+      final tagFrequency = <String, int>{};
+
+      for (final song in playlistSongs) {
+        final tags = song.tags.split(',').map((e) => e.trim().toLowerCase());
+        for (final tag in tags) {
+          tagFrequency[tag] = (tagFrequency[tag] ?? 0) + 1;
+        }
+      }
+
+      final dominantTags = tagFrequency.entries.toList()
+        ..sort((a, b) => b.value.compareTo(a.value));
+
+      String playlistName;
+      do {
+        playlistName = generatePlaylistName(
+          dominantTags.take(2).map((e) => e.key).toList(),
+        );
+      } while (usedNames.contains(playlistName));
+
+      usedNames.add(playlistName);
 
       playlists.add(
         PlaylistModel(
-          name: name,
-          description: description,
-          songs: playlistSongs.take(5).toList(),
+          name: playlistName,
+          description: '${playlistSongs.length} songs curated for you',
+          songs: playlistSongs,
         ),
       );
     }
