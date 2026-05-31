@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
       title: 'Vibe',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.darkMode,
-      home: const MusicUploadPage(),
+      home: const AuthWrapper(),
     );
   }
 }

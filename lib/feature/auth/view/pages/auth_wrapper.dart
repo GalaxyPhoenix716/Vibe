@@ -2,6 +2,7 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vibe/core/utils.dart';
+import 'package:vibe/core/widgets/bottom_nav.dart';
 import '../../../home/view/pages/home_page.dart';
 import '../../viewmodel/auth_viewmodel.dart';
 import 'auth_page.dart';
@@ -29,7 +30,7 @@ class AuthWrapper extends ConsumerWidget {
     return authState.when(
       data: (user) {
         if (user != null) {
-          return const HomePage();
+          return MainScreen();
         }
 
         return const AuthPage();

@@ -24,6 +24,7 @@ dependencies:
   audio_waveforms: ^2.0.2
   just_audio: ^0.10.5
   path_provider: ^2.1.5
+  curved_navigation_bar: ^1.0.6
 
 dev_dependencies:
   flutter_test:
