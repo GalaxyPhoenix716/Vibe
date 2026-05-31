@@ -7,6 +7,7 @@ class UploadState {
   final Duration? audioDuration;
   final Color dominantColor;
   final bool isUploading;
+  final List<String> selectedTags;
 
   const UploadState({
     this.coverImage,
@@ -14,15 +15,16 @@ class UploadState {
     this.audioDuration,
     required this.dominantColor,
     this.isUploading = false,
+    this.selectedTags = const [],
   });
 
   UploadState copyWith({
     ValueGetter<File?>? coverImage,
     ValueGetter<File?>? audioFile,
     ValueGetter<Duration?>? audioDuration,
-    ValueGetter<String?>? waveformPath,
     Color? dominantColor,
     bool? isUploading,
+    List<String>? selectedTags,
   }) {
     return UploadState(
       coverImage: coverImage != null ? coverImage() : this.coverImage,
@@ -32,6 +34,7 @@ class UploadState {
           : this.audioDuration,
       dominantColor: dominantColor ?? this.dominantColor,
       isUploading: isUploading ?? this.isUploading,
+      selectedTags: selectedTags ?? this.selectedTags,
     );
   }
 }

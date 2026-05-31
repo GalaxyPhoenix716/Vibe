@@ -6,6 +6,7 @@ import 'package:vibe/core/widgets/adaptive_background.dart';
 import 'package:vibe/feature/music/view/widgets/audio_upload.dart';
 import 'package:vibe/feature/music/view/widgets/cover_image.dart';
 import 'package:vibe/feature/music/view/widgets/song_details_form.dart';
+import 'package:vibe/feature/music/view/widgets/tag_select.dart';
 import 'package:vibe/feature/music/view/widgets/upload_song_button.dart';
 import 'package:vibe/feature/music/viewmodel/upload_viewmodel.dart';
 
@@ -73,6 +74,8 @@ class _MusicUploadPageState extends ConsumerState<MusicUploadPage> {
                         songNameController: songNameController,
                         artistNameController: artistNameController,
                       ),
+                      const SizedBox(height: 15),
+                      TagSelectSection(),
                       const SizedBox(height: 15),
                       UploadButton(
                         songNameController: songNameController,

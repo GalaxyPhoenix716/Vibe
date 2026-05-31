@@ -82,7 +82,6 @@ class UploadViewModel extends _$UploadViewModel {
   Future<String> uploadSong({
     required String songName,
     required String artistName,
-    required String tags,
   }) async {
     if (state.coverImage == null) {
       throw Exception('Please select a cover image');
@@ -110,12 +109,14 @@ class UploadViewModel extends _$UploadViewModel {
         throw Exception('User not authenticated');
       }
 
+      final tagsString = state.selectedTags.join(',');
+
       final result = await repository.uploadSong(
         audio: state.audioFile!,
         image: state.coverImage!,
         artist: artistName,
         songName: songName,
-        tags: tags,
+        tags: tagsString,
         token: token,
       );
 
@@ -130,6 +131,18 @@ class UploadViewModel extends _$UploadViewModel {
     } finally {
       state = state.copyWith(isUploading: false);
     }
+  }
+
+  void toggleTag(String tag) {
+    final tags = [...state.selectedTags];
+
+    if (tags.contains(tag)) {
+      tags.remove(tag);
+    } else {
+      tags.add(tag);
+    }
+
+    state = state.copyWith(selectedTags: tags);
   }
 
   void resetState() {

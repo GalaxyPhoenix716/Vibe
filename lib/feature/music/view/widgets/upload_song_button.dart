@@ -55,7 +55,6 @@ class UploadButton extends ConsumerWidget {
                       .uploadSong(
                         songName: songNameController.text,
                         artistName: artistNameController.text,
-                        tags: ""  //TODO: add tags
                       );
 
                   if (!context.mounted) {

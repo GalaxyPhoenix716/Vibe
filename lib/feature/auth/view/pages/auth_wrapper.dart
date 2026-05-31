@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vibe/core/utils.dart';
 import 'package:vibe/core/widgets/bottom_nav.dart';
-import '../../../home/view/pages/home_page.dart';
 import '../../viewmodel/auth_viewmodel.dart';
 import 'auth_page.dart';
 
