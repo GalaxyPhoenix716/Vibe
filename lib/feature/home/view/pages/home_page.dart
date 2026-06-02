@@ -1,23 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vibe/core/constants.dart';
 import 'package:vibe/core/theme/app_colors.dart';
+import 'package:vibe/feature/home/view/widgets/music_mix_carousel.dart';
 import 'package:vibe/feature/home/view/widgets/user_header.dart';
+import 'package:vibe/feature/music/viewmodel/upload_viewmodel.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final songsList = ref.watch(getAllSongsProvider);
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(backgroundColor: VibeColors.backgroundColor),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: VibePadding.horizontalPadding,
-          ),
-          child: CustomScrollView(
-            slivers: [SliverToBoxAdapter(child: UserHeader(userName: 'Mudit'))],
-          ),
+        body: songsList.when(
+          data: (songs) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: VibePadding.horizontalPadding,
+              ),
+              child: CustomScrollView(
+                slivers: [
+                  SliverToBoxAdapter(child: UserHeader(userName: 'Mudit')),
+                  SliverToBoxAdapter(child: MusicMixCarousel(songs: songs)),
+                ],
+              ),
+            );
+          },
+          error: (error, stackTrace) => Center(child: Text(error.toString())),
+          loading: () => const Center(child: CircularProgressIndicator()),
         ),
       ),
     );

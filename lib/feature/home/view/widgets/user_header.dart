@@ -41,6 +41,7 @@ class UserHeader extends StatelessWidget {
               ],
             ),
           ),
+          const SizedBox(height: 10),
         ],
       ),
     );
