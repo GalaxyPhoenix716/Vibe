@@ -6,7 +6,7 @@ class VibeColors {
   static const Color navbar = Color(0xFF1A1A1A);
   static const Color white = Colors.white;
 
-  static const Color greyText = Color(0xFF3A3A3A);
+  static const Color greyText = Color.fromARGB(255, 100, 100, 100);
   static const Color text = Colors.white;
 
   static const Color brightPurple = Color(0xFFF156FE);
