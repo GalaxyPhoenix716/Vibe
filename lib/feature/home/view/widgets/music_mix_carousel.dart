@@ -1,9 +1,7 @@
 import 'dart:developer' as dev;
 import 'dart:math';
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:vibe/core/utils.dart';
 import 'package:vibe/feature/home/model/song_model.dart';
 import 'package:vibe/feature/home/view/widgets/overllaped_carousel/overllaped_carousel.dart';
 
