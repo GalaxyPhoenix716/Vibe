@@ -26,6 +26,8 @@ dependencies:
   path_provider: ^2.1.5
   curved_navigation_bar: ^1.0.6
   cached_network_image: ^3.4.1
+  coverflow_carousel:
+    path: ../../../packages/coverflow_carousel
 
 dev_dependencies:
   flutter_test:

@@ -265,6 +265,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.15.0"
+  coverflow_carousel:
+    dependency: "direct main"
+    description:
+      path: "E:\\Coding\\Flutter\\packages\\coverflow_carousel"
+      relative: false
+    source: path
+    version: "1.0.0"
   cross_file:
     dependency: transitive
     description:

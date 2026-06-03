@@ -1,9 +1,9 @@
 import 'dart:developer' as dev;
 import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:coverflow_carousel/coverflow_carousel.dart';
 import 'package:flutter/material.dart';
 import 'package:vibe/feature/home/model/song_model.dart';
-import 'package:vibe/feature/home/view/widgets/overllaped_carousel/overllaped_carousel.dart';
 
 class MusicMixCarousel extends StatefulWidget {
   final List<SongModel> songs;
@@ -30,7 +30,7 @@ class _MusicMixCarouselState extends State<MusicMixCarousel> {
       padding: const EdgeInsets.all(8.0),
       child: SizedBox(
         height: min(screenWidth / 1.6, screenHeight * .9),
-        child: OverlappedCarousel.builder(
+        child: CoverflowCarousel.builder(
           itemCount: widget.songs.length,
           itemWidth: 200,
           itemHeight: 200,
