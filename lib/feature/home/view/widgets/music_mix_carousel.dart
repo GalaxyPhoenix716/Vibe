@@ -15,21 +15,6 @@ class MusicMixCarousel extends StatefulWidget {
 }
 
 class _MusicMixCarouselState extends State<MusicMixCarousel> {
-  late final PageController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = PageController(viewportFraction: 0.48);
-    _controller.addListener(() {});
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     if (widget.songs.isEmpty) {
