@@ -17,18 +17,25 @@ class HomePage extends ConsumerWidget {
       child: Scaffold(
         body: songsList.when(
           data: (songs) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: VibePadding.horizontalPadding,
-              ),
-              child: CustomScrollView(
-                slivers: [
-                  HomeAppBar(),
-                  SliverToBoxAdapter(child: const SizedBox(height: 10)),
-                  SliverToBoxAdapter(child: UserHeader(userName: 'Mudit')),
-                  SliverToBoxAdapter(child: MusicMixCarousel(songs: songs)),
-                ],
-              ),
+            return CustomScrollView(
+              slivers: [
+                HomeAppBar(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: VibePadding.horizontalPadding,
+                  ),
+                  child: SliverToBoxAdapter(
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 10),
+                        UserHeader(userName: 'Mudit'),
+                        MusicMixCarousel(songs: songs),
+                        const SizedBox(height: 10),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             );
           },
           error: (error, stackTrace) => Center(child: Text(error.toString())),

@@ -26,9 +26,9 @@ class HomeAppBar extends StatelessWidget {
             ),
             Positioned(
               right: 5,
-              top: -4,
+              top: -3,
               child: CircleAvatar(
-                radius: 29,
+                radius: 28,
                 backgroundColor: VibeColors.backgroundColor,
                 child: CircleAvatar(
                   radius: 25,
