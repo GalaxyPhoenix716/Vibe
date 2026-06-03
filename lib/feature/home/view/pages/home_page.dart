@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vibe/core/constants.dart';
-import 'package:vibe/core/theme/app_colors.dart';
+import 'package:vibe/feature/home/view/widgets/home_appbar.dart';
 import 'package:vibe/feature/home/view/widgets/music_mix_carousel.dart';
 import 'package:vibe/feature/home/view/widgets/user_header.dart';
 import 'package:vibe/feature/music/viewmodel/upload_viewmodel.dart';
@@ -15,7 +15,6 @@ class HomePage extends ConsumerWidget {
 
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(backgroundColor: VibeColors.backgroundColor),
         body: songsList.when(
           data: (songs) {
             return Padding(
@@ -24,6 +23,8 @@ class HomePage extends ConsumerWidget {
               ),
               child: CustomScrollView(
                 slivers: [
+                  HomeAppBar(),
+                  SliverToBoxAdapter(child: const SizedBox(height: 10)),
                   SliverToBoxAdapter(child: UserHeader(userName: 'Mudit')),
                   SliverToBoxAdapter(child: MusicMixCarousel(songs: songs)),
                 ],
