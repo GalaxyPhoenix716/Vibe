@@ -38,6 +38,7 @@ Future<Color> generatePalette(ImageProvider imageProvider) async {
         imageProvider,
         maximumColorCount: 16,
         generateHarmony: true, // Generate color harmony
+        filters: const [], // Disable default filter to include black, white, and gray backgrounds
       );
 
   final Color? dominantColor = paletteGenerator.dominantColor?.color;

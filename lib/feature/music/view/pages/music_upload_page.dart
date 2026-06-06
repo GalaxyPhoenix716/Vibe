@@ -42,52 +42,74 @@ class _MusicUploadPageState extends ConsumerState<MusicUploadPage> {
     );
 
     return Scaffold(
-      appBar: AppBar(),
-      body: SingleChildScrollView(
-        child: Stack(
-          children: [
-            //Background Gradient
-            AdaptiveBackground(dominantColor: dominantColor),
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        title: const Text(
+          'Upload Track',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w700,
+            fontFamily: 'SF Pro',
+            fontSize: 20,
+          ),
+        ),
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: Colors.white,
+            size: 20,
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: AdaptiveBackground(dominantColor: dominantColor),
+          ),
 
-            //Background Blur
-            BackdropFilter(
+          Positioned.fill(
+            child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
-              child: Container(color: Colors.black.withValues(alpha: 0.1)),
+              child: Container(color: Colors.black.withValues(alpha: 0.15)),
             ),
+          ),
 
-            //Main widgets
-            SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: VibePadding.horizontalPadding,
-                  vertical: VibePadding.verticalPadding,
-                ),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      CoverImageSection(),
-                      const SizedBox(height: 15),
-                      AudioUploadSection(),
-                      const SizedBox(height: 15),
-                      UploadFormSection(
-                        songNameController: songNameController,
-                        artistNameController: artistNameController,
-                      ),
-                      const SizedBox(height: 15),
-                      TagSelectSection(),
-                      const SizedBox(height: 15),
-                      UploadButton(
-                        songNameController: songNameController,
-                        artistNameController: artistNameController,
-                      ),
-                    ],
+          SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(
+                horizontal: VibePadding.horizontalPadding,
+                vertical: VibePadding.verticalPadding,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 10),
+                  const CoverImageSection(),
+                  const SizedBox(height: 20),
+                  const AudioUploadSection(),
+                  const SizedBox(height: 20),
+                  UploadFormSection(
+                    songNameController: songNameController,
+                    artistNameController: artistNameController,
                   ),
-                ),
+                  const SizedBox(height: 24),
+                  const TagSelectSection(),
+                  const SizedBox(height: 28),
+                  UploadButton(
+                    songNameController: songNameController,
+                    artistNameController: artistNameController,
+                  ),
+                  const SizedBox(height: 24),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

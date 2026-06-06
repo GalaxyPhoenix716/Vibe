@@ -21,30 +21,52 @@ class UploadButton extends ConsumerWidget {
       uploadViewModelProvider.select((state) => state.isUploading),
     );
 
+    final dominantColor = ref.watch(
+      uploadViewModelProvider.select((state) => state.dominantColor),
+    );
+
+    final accentColor = (dominantColor == Colors.black || dominantColor.computeLuminance() < 0.05)
+        ? VibeColors.brightPurple
+        : dominantColor;
+
+    final gradientColors = isUploading
+        ? [
+            Colors.white.withValues(alpha: 0.06),
+            Colors.white.withValues(alpha: 0.02),
+          ]
+        : [
+            accentColor,
+            Color.lerp(accentColor, Colors.black, 0.25) ?? VibeColors.deepBlue,
+          ];
+
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       width: double.infinity,
-      height: 62,
+      height: 60,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(22),
+        borderRadius: BorderRadius.circular(20),
         gradient: LinearGradient(
-          colors: [
-            Colors.white.withValues(alpha: 0.18),
-            Colors.white.withValues(alpha: 0.08),
-          ],
+          colors: gradientColors,
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.22),
-            blurRadius: 25,
-            offset: const Offset(0, 15),
-          ),
-        ],
-        border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+        boxShadow: isUploading
+            ? []
+            : [
+                BoxShadow(
+                  color: accentColor.withValues(alpha: 0.25),
+                  blurRadius: 20,
+                  offset: const Offset(0, 8),
+                  spreadRadius: 1,
+                ),
+              ],
+        border: Border.all(
+          color: isUploading
+              ? Colors.white.withValues(alpha: 0.05)
+              : Colors.white.withValues(alpha: 0.15),
+          width: 1.2,
+        ),
       ),
-
       child: ElevatedButton(
         onPressed: isUploading
             ? null
@@ -67,10 +89,9 @@ class UploadButton extends ConsumerWidget {
                     message: message,
                     contentType: ContentType.success,
                   );
-                        ref.read(uploadViewModelProvider.notifier).resetState();
+                  ref.read(uploadViewModelProvider.notifier).resetState();
                   songNameController.clear();
                   artistNameController.clear();
-                  
                 } catch (e) {
                   if (!context.mounted) {
                     return;
@@ -79,20 +100,18 @@ class UploadButton extends ConsumerWidget {
                   showSnackbar(
                     context,
                     title: 'Upload Failed',
-                    message: e.toString(),
+                    message: e.toString().replaceAll('Exception: ', ''),
                     contentType: ContentType.failure,
                   );
                 }
               },
-
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(22),
+            borderRadius: BorderRadius.circular(20),
           ),
         ),
-
         child: isUploading
             ? Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -100,15 +119,19 @@ class UploadButton extends ConsumerWidget {
                   const SizedBox(
                     width: 22,
                     height: 22,
-                    child: CircularProgressIndicator(strokeWidth: 2.4),
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2.4,
+                      color: Colors.white70,
+                    ),
                   ),
                   const SizedBox(width: 14),
                   Text(
                     'Uploading...',
                     style: TextStyle(
-                      fontSize: 17,
+                      fontSize: 16,
                       fontWeight: FontWeight.w600,
-                      color: VibeColors.text,
+                      color: VibeColors.text.withValues(alpha: 0.7),
+                      fontFamily: 'SF Pro',
                     ),
                   ),
                 ],
@@ -116,9 +139,10 @@ class UploadButton extends ConsumerWidget {
             : Text(
                 'Upload Song',
                 style: TextStyle(
-                  fontSize: 17,
+                  fontSize: 16,
                   fontWeight: FontWeight.w700,
                   color: VibeColors.text,
+                  fontFamily: 'SF Pro',
                 ),
               ),
       ),

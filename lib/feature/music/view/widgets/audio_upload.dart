@@ -1,11 +1,8 @@
+import 'dart:ui';
 import 'package:audio_waveforms/audio_waveforms.dart';
-
 import 'package:flutter/material.dart';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:vibe/core/theme/app_colors.dart';
-
 import '../../viewmodel/upload_viewmodel.dart';
 
 class AudioUploadSection extends ConsumerStatefulWidget {
@@ -16,7 +13,7 @@ class AudioUploadSection extends ConsumerStatefulWidget {
 }
 
 class _AudioUploadSectionState extends ConsumerState<AudioUploadSection> {
-  late final PlayerController _playerController;
+  PlayerController? _playerController;
   bool _isWaveformReady = false;
   String? _currentPath;
 
@@ -28,7 +25,7 @@ class _AudioUploadSectionState extends ConsumerState<AudioUploadSection> {
 
   @override
   void dispose() {
-    _playerController.dispose();
+    _playerController?.dispose();
     super.dispose();
   }
 
@@ -40,19 +37,29 @@ class _AudioUploadSectionState extends ConsumerState<AudioUploadSection> {
     _currentPath = path;
     _isWaveformReady = false;
 
+    final oldController = _playerController;
+    
+    final newController = PlayerController();
+    _playerController = newController;
+
     if (mounted) {
       setState(() {});
     }
 
-    await _playerController.preparePlayer(
+    if (oldController != null) {
+      oldController.dispose();
+    }
+
+    await newController.preparePlayer(
       path: path,
       shouldExtractWaveform: true,
     );
 
-    _isWaveformReady = true;
-
-    if (mounted) {
-      setState(() {});
+    if (_playerController == newController) {
+      _isWaveformReady = true;
+      if (mounted) {
+        setState(() {});
+      }
     }
   }
 
@@ -72,70 +79,110 @@ class _AudioUploadSectionState extends ConsumerState<AudioUploadSection> {
       uploadViewModelProvider.select((state) => state.audioDuration),
     );
 
-    // NO AUDIO SELECTED
+    final dominantColor = ref.watch(
+      uploadViewModelProvider.select((state) => state.dominantColor),
+    );
+
+    final accentColor = (dominantColor == Colors.black || dominantColor.computeLuminance() < 0.05)
+        ? VibeColors.brightPurple
+        : dominantColor;
 
     if (audioFile == null) {
-      _currentPath = null;
+      if (_currentPath != null) {
+        _currentPath = null;
+        _isWaveformReady = false;
+        _playerController?.dispose();
+        _playerController = null;
+      }
 
       return GestureDetector(
         onTap: () async {
           await ref.read(uploadViewModelProvider.notifier).selectAudioFile();
         },
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
-          width: double.infinity,
-          padding: const EdgeInsets.all(22),
-          decoration: BoxDecoration(
-            color: VibeColors.card.withValues(alpha: 0.85),
-            borderRadius: BorderRadius.circular(20),
+        child: CustomPaint(
+          painter: DashedBorderPainter(
+            color: Colors.white.withValues(alpha: 0.15),
+            borderRadius: 20,
           ),
-          child: const Column(
-            children: [
-              Icon(Icons.audio_file_rounded, size: 38),
-
-              SizedBox(height: 12),
-
-              Text(
-                'Upload MP3 File',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-              ),
-            ],
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(22),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.03),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.05),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.audiotrack_rounded,
+                    size: 32,
+                    color: Colors.white70,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                const Text(
+                  'Upload Audio Track',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                    fontFamily: 'SF Pro',
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Supports MP3, M4A, WAV',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.white.withValues(alpha: 0.5),
+                    fontFamily: 'SF Pro',
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       );
     }
 
-    // PREPARE WAVEFORM
     _prepareWaveform(audioFile.path);
 
-    // AUDIO CARD
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 400),
+    return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.08),
+        color: Colors.white.withValues(alpha: 0.04),
         borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
       ),
-
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // FILE INFO
           Row(
             children: [
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.08),
+                  color: accentColor.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(15),
+                  border: Border.all(
+                    color: accentColor.withValues(alpha: 0.2),
+                    width: 1,
+                  ),
                 ),
-                child: const Icon(Icons.music_note_rounded, size: 28),
+                child: Icon(
+                  Icons.music_note_rounded,
+                  size: 26,
+                  color: accentColor,
+                ),
               ),
-
               const SizedBox(width: 14),
-
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -147,18 +194,19 @@ class _AudioUploadSectionState extends ConsumerState<AudioUploadSection> {
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
+                        fontFamily: 'SF Pro',
+                        color: Colors.white,
                       ),
                     ),
-
                     const SizedBox(height: 4),
-
                     Text(
                       audioDuration != null
                           ? formatDuration(audioDuration)
                           : '--:--',
                       style: TextStyle(
                         fontSize: 13,
-                        color: Colors.white.withValues(alpha: 0.7),
+                        color: Colors.white.withValues(alpha: 0.65),
+                        fontFamily: 'SF Pro',
                       ),
                     ),
                   ],
@@ -166,30 +214,31 @@ class _AudioUploadSectionState extends ConsumerState<AudioUploadSection> {
               ),
             ],
           ),
-
           const SizedBox(height: 22),
-
-          // WAVEFORM
+  
           if (_isWaveformReady)
             AudioFileWaveforms(
               size: Size(MediaQuery.of(context).size.width - 80, 70),
-              playerController: _playerController,
+              playerController: _playerController!,
               waveformType: WaveformType.fitWidth,
               playerWaveStyle: PlayerWaveStyle(
-                fixedWaveColor: Colors.white.withValues(alpha: 0.35),
-                liveWaveColor: Colors.white,
+                fixedWaveColor: Colors.white.withValues(alpha: 0.18),
+                liveWaveColor: accentColor,
               ),
               enableSeekGesture: false,
             )
           else
-            const SizedBox(
+            SizedBox(
               height: 70,
-              child: Center(child: CircularProgressIndicator()),
+              child: Center(
+                child: CircularProgressIndicator(
+                  color: accentColor,
+                  strokeWidth: 2.5,
+                ),
+              ),
             ),
-
           const SizedBox(height: 20),
-
-          // ACTION BUTTONS
+  
           Row(
             children: [
               Expanded(
@@ -199,12 +248,28 @@ class _AudioUploadSectionState extends ConsumerState<AudioUploadSection> {
                         .read(uploadViewModelProvider.notifier)
                         .selectAudioFile();
                   },
-                  child: const Text('Change'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white.withValues(alpha: 0.05),
+                    foregroundColor: Colors.white,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      side: BorderSide(
+                        color: Colors.white.withValues(alpha: 0.08),
+                      ),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                  ),
+                  child: const Text(
+                    'Change',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'SF Pro',
+                    ),
+                  ),
                 ),
               ),
-
               const SizedBox(width: 12),
-
               Expanded(
                 child: ElevatedButton(
                   onPressed: () {
@@ -212,7 +277,25 @@ class _AudioUploadSectionState extends ConsumerState<AudioUploadSection> {
                         .read(uploadViewModelProvider.notifier)
                         .removeAudioFile();
                   },
-                  child: const Text('Remove'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.redAccent.withValues(alpha: 0.08),
+                    foregroundColor: Colors.redAccent,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      side: BorderSide(
+                        color: Colors.redAccent.withValues(alpha: 0.15),
+                      ),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                  ),
+                  child: const Text(
+                    'Remove',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'SF Pro',
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -222,3 +305,51 @@ class _AudioUploadSectionState extends ConsumerState<AudioUploadSection> {
     );
   }
 }
+
+class DashedBorderPainter extends CustomPainter {
+  final Color color;
+  final double strokeWidth;
+  final double gap;
+  final double dashLength;
+  final double borderRadius;
+
+  DashedBorderPainter({
+    required this.color,
+    this.strokeWidth = 1.5,
+    this.gap = 4.0,
+    this.dashLength = 6.0,
+    this.borderRadius = 28.0,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = strokeWidth
+      ..style = PaintingStyle.stroke;
+
+    final RRect rrect = RRect.fromRectAndRadius(
+      Rect.fromLTWH(0, 0, size.width, size.height),
+      Radius.circular(borderRadius),
+    );
+
+    final Path path = Path()..addRRect(rrect);
+    final Path dashPath = Path();
+
+    double distance = 0.0;
+    for (final PathMetric measurePath in path.computeMetrics()) {
+      while (distance < measurePath.length) {
+        dashPath.addPath(
+          measurePath.extractPath(distance, distance + dashLength),
+          Offset.zero,
+        );
+        distance += dashLength + gap;
+      }
+    }
+    canvas.drawPath(dashPath, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
