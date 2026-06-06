@@ -2,6 +2,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:vibe/core/theme/app_colors.dart';
 import 'package:vibe/feature/home/view/pages/home_page.dart';
+import 'package:vibe/feature/home/view/widgets/music_slab.dart';
 import 'package:vibe/feature/library/view/pages/library_page.dart';
 import 'package:vibe/feature/music/view/pages/music_upload_page.dart';
 import 'package:vibe/feature/search/view/pages/search_page.dart';
@@ -27,7 +28,17 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
-      body: IndexedStack(index: currentIndex, children: pages),
+      body: Stack(
+        children: [
+          IndexedStack(index: currentIndex, children: pages),
+          const Positioned(
+            bottom: 80,
+            left: 0,
+            right: 0,
+            child: MusicSlab(),
+          ),
+        ],
+      ),
       bottomNavigationBar: CurvedNavigationBar(
         index: currentIndex,
         backgroundColor: Colors.transparent,

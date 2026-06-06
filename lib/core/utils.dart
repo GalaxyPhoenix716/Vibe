@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -32,18 +33,27 @@ void showSnackbar(
     ..showSnackBar(snackbar);
 }
 
-Future<Color> generatePalette(ImageProvider imageProvider) async {
+Future<Color> generatePalette(dynamic imageInput) async {
+  ImageProvider imageProvider;
+  if (imageInput is ImageProvider) {
+    imageProvider = imageInput;
+  } else if (imageInput is String) {
+    imageProvider = CachedNetworkImageProvider(imageInput);
+  } else {
+    throw ArgumentError('Invalid image input type: ${imageInput.runtimeType}');
+  }
+
   final PaletteGeneratorMaster paletteGenerator =
       await PaletteGeneratorMaster.fromImageProvider(
         imageProvider,
         maximumColorCount: 16,
         generateHarmony: true, // Generate color harmony
-        filters: const [], // Disable default filter to include black, white, and gray backgrounds
+        // filters: const [], // Disable default filter to include black, white, and gray backgrounds
       );
 
   final Color? dominantColor = paletteGenerator.dominantColor?.color;
 
-  return dominantColor!;
+  return dominantColor ?? Colors.black;
 }
 
 Future<File?> pickAudio() async {

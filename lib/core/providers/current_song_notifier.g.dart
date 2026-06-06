@@ -51,6 +51,39 @@ final class AudioPlayerInstanceProvider
 String _$audioPlayerInstanceHash() =>
     r'b447b285bbdaca8b4fb48ea88b42f42f4d1033e0';
 
+@ProviderFor(currentSongColor)
+final currentSongColorProvider = CurrentSongColorProvider._();
+
+final class CurrentSongColorProvider
+    extends $FunctionalProvider<AsyncValue<Color>, Color, FutureOr<Color>>
+    with $FutureModifier<Color>, $FutureProvider<Color> {
+  CurrentSongColorProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'currentSongColorProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$currentSongColorHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<Color> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<Color> create(Ref ref) {
+    return currentSongColor(ref);
+  }
+}
+
+String _$currentSongColorHash() => r'03a9a0971167e3a7ac06991c6ae59ca045605119';
+
 @ProviderFor(CurrentSongNotifier)
 final currentSongProvider = CurrentSongNotifierProvider._();
 
@@ -84,7 +117,7 @@ final class CurrentSongNotifierProvider
 }
 
 String _$currentSongNotifierHash() =>
-    r'518b54ff11270e759395b12f01adfdb024f5fa64';
+    r'821320270f7da15216ffcb729408c7c6851db334';
 
 abstract class _$CurrentSongNotifier extends $Notifier<SongModel?> {
   SongModel? build();
