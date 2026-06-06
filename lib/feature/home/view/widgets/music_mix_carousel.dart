@@ -1,18 +1,20 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coverflow_carousel/coverflow_carousel.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vibe/core/providers/current_song_notifier.dart';
 import 'package:vibe/feature/home/model/song_model.dart';
 
-class MusicMixCarousel extends StatefulWidget {
+class MusicMixCarousel extends ConsumerStatefulWidget {
   final List<SongModel> songs;
 
   const MusicMixCarousel({super.key, required this.songs});
 
   @override
-  State<MusicMixCarousel> createState() => _MusicMixCarouselState();
+  ConsumerState<MusicMixCarousel> createState() => _MusicMixCarouselState();
 }
 
-class _MusicMixCarouselState extends State<MusicMixCarousel> {
+class _MusicMixCarouselState extends ConsumerState<MusicMixCarousel> {
   @override
   Widget build(BuildContext context) {
     if (widget.songs.isEmpty) {
@@ -32,12 +34,15 @@ class _MusicMixCarouselState extends State<MusicMixCarousel> {
         entryAnimationDuration: const Duration(milliseconds: 1000),
         entryAnimationCurve: Curves.easeOutBack,
         itemBuilder: (context, index) {
+          final song = widget.songs[index];
           return GestureDetector(
-            onTap: () {},
+            onTap: () {
+              ref.read(currentSongProvider.notifier).updateSong(song);
+            },
             child: ClipRRect(
               borderRadius: BorderRadius.circular(24),
               child: CachedNetworkImage(
-                imageUrl: widget.songs[index].thumbnail_url,
+                imageUrl: song.thumbnail_url,
                 fit: BoxFit.cover,
               ),
             ),
