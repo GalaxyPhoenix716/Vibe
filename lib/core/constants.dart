@@ -1,7 +1,7 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class VibePadding {
-  static const double horizontalPadding = 15;
+  static const double horizontalPadding = 20;
   static const double verticalPadding = 15;
 }
 

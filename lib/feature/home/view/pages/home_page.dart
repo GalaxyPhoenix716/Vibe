@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vibe/core/constants.dart';
+import 'package:vibe/core/theme/app_colors.dart';
+import 'package:vibe/feature/auth/viewmodel/auth_viewmodel.dart';
 import 'package:vibe/feature/home/view/widgets/home_appbar.dart';
 import 'package:vibe/feature/home/view/widgets/music_mix_carousel.dart';
 import 'package:vibe/feature/home/view/widgets/user_header.dart';
@@ -12,6 +14,7 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final songsList = ref.watch(getAllSongsProvider);
+    final userName = ref.read(authViewModelProvider).value?.name.split(" ")[0];
 
     return SafeArea(
       child: Scaffold(
@@ -20,17 +23,40 @@ class HomePage extends ConsumerWidget {
             return CustomScrollView(
               slivers: [
                 HomeAppBar(),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: VibePadding.horizontalPadding,
-                  ),
-                  child: SliverToBoxAdapter(
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: VibePadding.horizontalPadding,
+                    ),
                     child: Column(
                       children: [
                         const SizedBox(height: 10),
-                        UserHeader(userName: 'Mudit'),
+                        UserHeader(userName: userName!),
                         MusicMixCarousel(songs: songs),
                         const SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              "Popular Playlist",
+                              style: TextStyle(
+                                fontFamily: 'SF Pro',
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+
+                            const Text(
+                              "View all",
+                              style: TextStyle(
+                                color: VibeColors.greyText,
+                                fontFamily: 'SF Pro',
+                                fontSize: 15,
+                                fontWeight: FontWeight.w300,
+                              ),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ),
@@ -39,7 +65,9 @@ class HomePage extends ConsumerWidget {
             );
           },
           error: (error, stackTrace) => Center(child: Text(error.toString())),
-          loading: () => const Center(child: CircularProgressIndicator()),
+          loading: () => const Center(
+            child: CircularProgressIndicator(color: VibeColors.brightPurple),
+          ),
         ),
       ),
     );

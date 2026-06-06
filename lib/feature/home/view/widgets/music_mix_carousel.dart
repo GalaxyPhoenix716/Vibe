@@ -21,30 +21,26 @@ class _MusicMixCarouselState extends State<MusicMixCarousel> {
       return const SizedBox.shrink();
     }
 
-    dev.log(widget.songs.toString());
-
-    var screenWidth = MediaQuery.of(context).size.width;
-    var screenHeight = MediaQuery.of(context).size.height;
-
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SizedBox(
-        height: min(screenWidth / 1.6, screenHeight * .9),
+        height: 200,
         child: CoverflowCarousel.builder(
           itemCount: widget.songs.length,
-          itemWidth: 200,
-          itemHeight: 200,
+          itemWidth: 180,
+          itemHeight: 180,
           initialPage: widget.songs.length ~/ 2,
-          onPageChanged: (index) {
-            debugPrint(widget.songs[index].song_name);
-          },
-
+          nearCardSpacing: 40,
+          farCardSpacing: 45,
           itemBuilder: (context, index) {
-            return ClipRRect(
-              borderRadius: BorderRadius.circular(24),
-              child: CachedNetworkImage(
-                imageUrl: widget.songs[index].thumbnail_url,
-                fit: BoxFit.cover,
+            return GestureDetector(
+              onTap: () {},
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(24),
+                child: CachedNetworkImage(
+                  imageUrl: widget.songs[index].thumbnail_url,
+                  fit: BoxFit.cover,
+                ),
               ),
             );
           },
