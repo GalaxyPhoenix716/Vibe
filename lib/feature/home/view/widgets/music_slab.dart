@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vibe/core/providers/current_song_notifier.dart';
 import 'package:vibe/core/theme/app_colors.dart';
@@ -13,6 +14,16 @@ class MusicSlab extends ConsumerWidget {
     final currentSongColorAsync = ref.watch(currentSongColorProvider);
     final isPlayingAsync = ref.watch(isPlayingProvider);
     final isPlaying = isPlayingAsync.value ?? false;
+    final durationAsync = ref.watch(currentSongDurationProvider);
+    final positionAsync = ref.watch(currentSongPositionProvider);
+
+    final duration = durationAsync.value ?? Duration.zero;
+    final position = positionAsync.value ?? Duration.zero;
+
+    // Calculate progress ratio (0.0 to 1.0)
+    final double progress = duration.inMilliseconds > 0
+        ? position.inMilliseconds / duration.inMilliseconds
+        : 0.0;
 
     if (currentSong == null) {
       return const SizedBox();
@@ -71,22 +82,23 @@ class MusicSlab extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Icon(CupertinoIcons.heart),
-
-                    const SizedBox(width: 20),
-
-                    GestureDetector(
-                      onTap: () {
-                        ref.read(currentSongProvider.notifier).playPause();
-                      },
-                      child: Icon(
-                        isPlaying
-                            ? CupertinoIcons.pause_fill
-                            : CupertinoIcons.play_arrow_solid,
-                      ),
+                    IconButton(
+                      onPressed: () {},
+                      icon: Icon(CupertinoIcons.heart),
+                      color: VibeColors.white,
                     ),
 
-                    const SizedBox(width: 10,)
+                    const SizedBox(width: 5),
+
+                    IconButton(
+                      onPressed: () {
+                        ref.read(currentSongProvider.notifier).playPause();
+                      },
+                      icon: isPlaying
+                          ? Icon(CupertinoIcons.pause_fill)
+                          : Icon(CupertinoIcons.play_arrow_solid),
+                      color: VibeColors.white,
+                    ),
                   ],
                 ),
               ],
@@ -107,14 +119,14 @@ class MusicSlab extends ConsumerWidget {
               ),
             ),
           ),
-          
+
           Positioned(
             bottom: 0,
             left: 13,
             child: ClipRRect(
               child: Container(
                 height: 3,
-                width: 50,
+                width: (MediaQuery.of(context).size.width - 42) * progress,
                 decoration: BoxDecoration(
                   color: VibeColors.white,
                   borderRadius: BorderRadius.circular(15),

@@ -65,3 +65,15 @@ Stream<bool> isPlaying(Ref ref) {
   final player = ref.watch(audioPlayerInstanceProvider);
   return player.playingStream;
 }
+
+@riverpod
+Stream<Duration?> currentSongDuration(Ref ref) {
+  final player = ref.watch(audioPlayerInstanceProvider);
+  return player.durationStream;
+}
+
+@riverpod
+Stream<Duration> currentSongPosition(Ref ref) {
+  final player = ref.watch(audioPlayerInstanceProvider);
+  return player.positionStream;
+}

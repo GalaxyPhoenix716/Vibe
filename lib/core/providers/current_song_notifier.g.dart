@@ -169,3 +169,73 @@ final class IsPlayingProvider
 }
 
 String _$isPlayingHash() => r'e484ab2ffb0b4e6e942481ff3897e4e101d3144e';
+
+@ProviderFor(currentSongDuration)
+final currentSongDurationProvider = CurrentSongDurationProvider._();
+
+final class CurrentSongDurationProvider
+    extends
+        $FunctionalProvider<AsyncValue<Duration?>, Duration?, Stream<Duration?>>
+    with $FutureModifier<Duration?>, $StreamProvider<Duration?> {
+  CurrentSongDurationProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'currentSongDurationProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$currentSongDurationHash();
+
+  @$internal
+  @override
+  $StreamProviderElement<Duration?> $createElement($ProviderPointer pointer) =>
+      $StreamProviderElement(pointer);
+
+  @override
+  Stream<Duration?> create(Ref ref) {
+    return currentSongDuration(ref);
+  }
+}
+
+String _$currentSongDurationHash() =>
+    r'37eb5164fac01c0c627a1acd2a4631b497b04c81';
+
+@ProviderFor(currentSongPosition)
+final currentSongPositionProvider = CurrentSongPositionProvider._();
+
+final class CurrentSongPositionProvider
+    extends
+        $FunctionalProvider<AsyncValue<Duration>, Duration, Stream<Duration>>
+    with $FutureModifier<Duration>, $StreamProvider<Duration> {
+  CurrentSongPositionProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'currentSongPositionProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$currentSongPositionHash();
+
+  @$internal
+  @override
+  $StreamProviderElement<Duration> $createElement($ProviderPointer pointer) =>
+      $StreamProviderElement(pointer);
+
+  @override
+  Stream<Duration> create(Ref ref) {
+    return currentSongPosition(ref);
+  }
+}
+
+String _$currentSongPositionHash() =>
+    r'9622debb37e9f8f661e6041fd9ed9038cc86a042';
