@@ -17,7 +17,10 @@ class PlaylistModel {
 
   static String generatePlaylistName(List<String> tags) {
     final Random random = Random();
-    final normalizedTags = tags.map((e) => e.trim().toLowerCase()).toList();
+    final normalizedTags = tags
+        .map((e) => e.trim().toLowerCase())
+        .where((e) => e.isNotEmpty)
+        .toList();
 
     final moodPool = <String>[];
     final genrePool = <String>[];
@@ -42,7 +45,34 @@ class PlaylistModel {
           '${PlaylistWords.fallbackWords[random.nextInt(PlaylistWords.fallbackWords.length)]}';
     }
 
-    return 'Daily Mix';
+    // Custom/unregistered tags: Capitalize and pair with a fallback word
+    if (normalizedTags.isNotEmpty) {
+      final selectedTag = normalizedTags[random.nextInt(normalizedTags.length)];
+      final capitalizedTag =
+          '${selectedTag[0].toUpperCase()}${selectedTag.substring(1)}';
+      final suffix = PlaylistWords.fallbackWords[
+          random.nextInt(PlaylistWords.fallbackWords.length)];
+      return '$capitalizedTag $suffix';
+    }
+
+    // Generic fallback names when no tags are present at all
+    final genericPrefixes = [
+      'Daily',
+      'Weekly',
+      'Fresh',
+      'Discover',
+      'Essential',
+      'Ultimate',
+      'Chillout',
+      'Acoustic',
+      'Sunset',
+      'Infinite',
+      'Vibe',
+    ];
+    final prefix = genericPrefixes[random.nextInt(genericPrefixes.length)];
+    final suffix = PlaylistWords.fallbackWords[
+        random.nextInt(PlaylistWords.fallbackWords.length)];
+    return '$prefix $suffix';
   }
 
   static List<PlaylistModel> generatePlaylists(List<SongModel> songs) {
@@ -95,6 +125,16 @@ class PlaylistModel {
         final pool = availableSongs.length >= 5 ? availableSongs : songs;
         final shuffledPool = [...pool]..shuffle(random);
         playlistSongs = shuffledPool.take(5).toList();
+
+        // Extract any tags present in these mixed songs so we can name/describe it nicely
+        final songTags = playlistSongs
+            .expand((s) => s.tags.split(','))
+            .map((t) => t.trim().toLowerCase())
+            .where((t) => t.isNotEmpty)
+            .toList();
+        if (songTags.isNotEmpty) {
+          playlistTags = songTags;
+        }
       }
 
       for (final song in playlistSongs) {

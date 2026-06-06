@@ -28,6 +28,9 @@ class _MusicMixCarouselState extends State<MusicMixCarousel> {
         initialPage: widget.songs.length ~/ 2,
         nearCardSpacing: 40,
         farCardSpacing: 45,
+        entryAnimation: CoverflowEntryAnimation.spacingExpand,
+        entryAnimationDuration: const Duration(milliseconds: 1000),
+        entryAnimationCurve: Curves.easeOutBack,
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {},

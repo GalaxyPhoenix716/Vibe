@@ -65,7 +65,7 @@ class HomePage extends ConsumerWidget {
 
                         const SizedBox(height: 10),
 
-                        PlaylistCarousel(songs: songs),
+                        PlaylistCarousel(),
                       ],
                     ),
                   ),
