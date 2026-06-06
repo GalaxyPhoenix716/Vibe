@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class VibeColors {
   static const Color backgroundColor = Color(0xFF010101);
   static const Color card = Color(0xFF2A2A2A);
+  static const Color inactive = Color.fromARGB(255, 131, 131, 131);
   static const Color navbar = Color(0xFF1A1A1A);
   static const Color white = Colors.white;
 
