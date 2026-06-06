@@ -1,3 +1,5 @@
+import 'dart:developer' as dev;
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coverflow_carousel/coverflow_carousel.dart';
 import 'package:flutter/material.dart';
@@ -37,6 +39,7 @@ class _MusicMixCarouselState extends ConsumerState<MusicMixCarousel> {
           final song = widget.songs[index];
           return GestureDetector(
             onTap: () {
+              dev.log("tapped");
               ref.read(currentSongProvider.notifier).updateSong(song);
             },
             child: ClipRRect(

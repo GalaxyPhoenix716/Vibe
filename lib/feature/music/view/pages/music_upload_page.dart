@@ -68,9 +68,7 @@ class _MusicUploadPageState extends ConsumerState<MusicUploadPage> {
       ),
       body: Stack(
         children: [
-          Positioned.fill(
-            child: AdaptiveBackground(dominantColor: dominantColor),
-          ),
+          AdaptiveBackground(dominantColor: dominantColor),
 
           Positioned.fill(
             child: BackdropFilter(
