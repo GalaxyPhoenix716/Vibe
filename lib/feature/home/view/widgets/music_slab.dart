@@ -72,7 +72,9 @@ class MusicSlab extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Icon(CupertinoIcons.heart),
+
                     const SizedBox(width: 20),
+
                     GestureDetector(
                       onTap: () {
                         ref.read(currentSongProvider.notifier).playPause();
@@ -83,6 +85,8 @@ class MusicSlab extends ConsumerWidget {
                             : CupertinoIcons.play_arrow_solid,
                       ),
                     ),
+
+                    const SizedBox(width: 10,)
                   ],
                 ),
               ],
