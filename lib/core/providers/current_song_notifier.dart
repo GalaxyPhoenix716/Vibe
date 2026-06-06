@@ -48,4 +48,20 @@ class CurrentSongNotifier extends _$CurrentSongNotifier {
       state = null;
     }
   }
+
+  void playPause() {
+    final player = ref.read(audioPlayerInstanceProvider);
+
+    if (player.playing) {
+      player.pause();
+    } else {
+      player.play();
+    }
+  }
+}
+
+@riverpod
+Stream<bool> isPlaying(Ref ref) {
+  final player = ref.watch(audioPlayerInstanceProvider);
+  return player.playingStream;
 }

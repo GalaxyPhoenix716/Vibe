@@ -117,7 +117,7 @@ final class CurrentSongNotifierProvider
 }
 
 String _$currentSongNotifierHash() =>
-    r'821320270f7da15216ffcb729408c7c6851db334';
+    r'd06f46d81ab2582f43fbe628a0b051932911217e';
 
 abstract class _$CurrentSongNotifier extends $Notifier<SongModel?> {
   SongModel? build();
@@ -136,3 +136,36 @@ abstract class _$CurrentSongNotifier extends $Notifier<SongModel?> {
     element.handleCreate(ref, build);
   }
 }
+
+@ProviderFor(isPlaying)
+final isPlayingProvider = IsPlayingProvider._();
+
+final class IsPlayingProvider
+    extends $FunctionalProvider<AsyncValue<bool>, bool, Stream<bool>>
+    with $FutureModifier<bool>, $StreamProvider<bool> {
+  IsPlayingProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'isPlayingProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$isPlayingHash();
+
+  @$internal
+  @override
+  $StreamProviderElement<bool> $createElement($ProviderPointer pointer) =>
+      $StreamProviderElement(pointer);
+
+  @override
+  Stream<bool> create(Ref ref) {
+    return isPlaying(ref);
+  }
+}
+
+String _$isPlayingHash() => r'e484ab2ffb0b4e6e942481ff3897e4e101d3144e';

@@ -11,6 +11,8 @@ class MusicSlab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currentSong = ref.watch(currentSongProvider);
     final currentSongColorAsync = ref.watch(currentSongColorProvider);
+    final isPlayingAsync = ref.watch(isPlayingProvider);
+    final isPlaying = isPlayingAsync.value ?? false;
 
     if (currentSong == null) {
       return const SizedBox();
@@ -71,7 +73,16 @@ class MusicSlab extends ConsumerWidget {
                   children: [
                     Icon(CupertinoIcons.heart),
                     const SizedBox(width: 20),
-                    Icon(CupertinoIcons.play_arrow_solid),
+                    GestureDetector(
+                      onTap: () {
+                        ref.read(currentSongProvider.notifier).playPause();
+                      },
+                      child: Icon(
+                        isPlaying
+                            ? CupertinoIcons.pause_fill
+                            : CupertinoIcons.play_arrow_solid,
+                      ),
+                    ),
                   ],
                 ),
               ],
