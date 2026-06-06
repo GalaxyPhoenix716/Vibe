@@ -48,6 +48,7 @@ flutter:
 
   assets:
     - lib/core/images/
+    - lib/core/images/playlist_images/
     - lib/core/icons/
     - lib/core/fonts/
     - .env

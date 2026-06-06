@@ -1,40 +1,43 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coverflow_carousel/coverflow_carousel.dart';
 import 'package:flutter/material.dart';
+import 'package:vibe/feature/home/model/playlist_model.dart';
 import 'package:vibe/feature/home/model/song_model.dart';
 
-class MusicMixCarousel extends StatefulWidget {
+class PlaylistCarousel extends StatefulWidget {
   final List<SongModel> songs;
-
-  const MusicMixCarousel({super.key, required this.songs});
+  const PlaylistCarousel({super.key, required this.songs});
 
   @override
-  State<MusicMixCarousel> createState() => _MusicMixCarouselState();
+  State<PlaylistCarousel> createState() => _PlaylistCarouselState();
 }
 
-class _MusicMixCarouselState extends State<MusicMixCarousel> {
+class _PlaylistCarouselState extends State<PlaylistCarousel> {
   @override
   Widget build(BuildContext context) {
+    final playlist = PlaylistModel.generatePlaylists(widget.songs);
+
     if (widget.songs.isEmpty) {
       return const SizedBox.shrink();
     }
-
     return SizedBox(
       height: 200,
       child: CoverflowCarousel.builder(
-        itemCount: widget.songs.length,
+        itemCount: playlist.length,
         itemWidth: 180,
         itemHeight: 180,
-        initialPage: widget.songs.length ~/ 2,
-        nearCardSpacing: 40,
-        farCardSpacing: 45,
+        initialPage: playlist.length ~/ 2,
+        nearCardSpacing: 50,
+        farCardSpacing: 60,
+        visibleItems: 2,
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {},
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(24),
-              child: CachedNetworkImage(
-                imageUrl: widget.songs[index].thumbnail_url,
+            child: ClipOval(
+              child: Image.asset(
+                playlist[index].playlistThumbnail,
+                width: 180,
+                height: 180,
                 fit: BoxFit.cover,
               ),
             ),
