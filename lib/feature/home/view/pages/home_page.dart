@@ -17,66 +17,66 @@ class HomePage extends ConsumerWidget {
     final songsList = ref.watch(getAllSongsProvider);
     final userName = ref.read(authViewModelProvider).value?.name.split(" ")[0];
 
-    return SafeArea(
-      child: Scaffold(
-        body: songsList.when(
-          data: (songs) {
-            return CustomScrollView(
-              slivers: [
-                HomeAppBar(),
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: VibePadding.horizontalPadding,
-                    ),
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 10),
-
-                        UserHeader(userName: userName!),
-
-                        MusicMixCarousel(songs: songs),
-
-                        const SizedBox(height: 10),
-
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              "Popular Playlist",
-                              style: TextStyle(
-                                fontFamily: 'SF Pro',
-                                fontSize: 20,
-                                fontWeight: FontWeight.w500,
-                              ),
+    return Scaffold(
+      body: songsList.when(
+        data: (songs) {
+          return CustomScrollView(
+            slivers: [
+              HomeAppBar(),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: VibePadding.horizontalPadding,
+                  ),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 10),
+    
+                      UserHeader(userName: userName!),
+    
+                      MusicMixCarousel(songs: songs),
+    
+                      const SizedBox(height: 10),
+    
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            "Popular Playlist",
+                            style: TextStyle(
+                              fontFamily: 'SF Pro',
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
                             ),
-
-                            const Text(
-                              "View all",
-                              style: TextStyle(
-                                color: VibeColors.greyText,
-                                fontFamily: 'SF Pro',
-                                fontSize: 15,
-                                fontWeight: FontWeight.w300,
-                              ),
+                          ),
+    
+                          const Text(
+                            "View all",
+                            style: TextStyle(
+                              color: VibeColors.greyText,
+                              fontFamily: 'SF Pro',
+                              fontSize: 15,
+                              fontWeight: FontWeight.w300,
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
+                      ),
+    
+                      const SizedBox(height: 10),
+    
+                      PlaylistCarousel(),
 
-                        const SizedBox(height: 10),
-
-                        PlaylistCarousel(),
-                      ],
-                    ),
+                      const SizedBox(height: 100,),
+                    ],
                   ),
                 ),
-              ],
-            );
-          },
-          error: (error, stackTrace) => Center(child: Text(error.toString())),
-          loading: () => const Center(
-            child: CircularProgressIndicator(color: VibeColors.brightPurple),
-          ),
+              ),
+            ],
+          );
+        },
+        error: (error, stackTrace) => Center(child: Text(error.toString())),
+        loading: () => const Center(
+          child: CircularProgressIndicator(color: VibeColors.brightPurple),
         ),
       ),
     );

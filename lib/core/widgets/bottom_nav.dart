@@ -26,37 +26,36 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBody: true,
-      body: Stack(
-        children: [
-          IndexedStack(index: currentIndex, children: pages),
-          const Positioned(
-            bottom: 80,
-            left: 0,
-            right: 0,
-            child: MusicSlab(),
-          ),
-        ],
-      ),
-      bottomNavigationBar: CurvedNavigationBar(
-        index: currentIndex,
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        extendBody: true,
         backgroundColor: Colors.transparent,
-        color: VibeColors.navbar,
-        buttonBackgroundColor: VibeColors.navbar,
-        animationDuration: const Duration(milliseconds: 350),
-        items: const [
-          Icon(Icons.home_rounded, color: Colors.white),
-          Icon(Icons.search_rounded, color: Colors.white),
-          Icon(Icons.upload_rounded, color: Colors.white),
-          Icon(Icons.library_music_rounded, color: Colors.white),
-        ],
+        body: Stack(
+          children: [
+            IndexedStack(index: currentIndex, children: pages),
+            const Positioned(bottom: 80, left: 0, right: 0, child: MusicSlab()),
+          ],
+        ),
+        bottomNavigationBar: CurvedNavigationBar(
+          index: currentIndex,
+          backgroundColor: VibeColors.navbar.withValues(alpha: 0),
+          color: VibeColors.navbar,
+          buttonBackgroundColor: VibeColors.navbar,
+          animationDuration: const Duration(milliseconds: 350),
+          items: const [
+            Icon(Icons.home_rounded, color: Colors.white),
+            Icon(Icons.search_rounded, color: Colors.white),
+            Icon(Icons.upload_rounded, color: Colors.white),
+            Icon(Icons.library_music_rounded, color: Colors.white),
+          ],
 
-        onTap: (index) {
-          setState(() {
-            currentIndex = index;
-          });
-        },
+          onTap: (index) {
+            setState(() {
+              currentIndex = index;
+            });
+          },
+        ),
       ),
     );
   }
