@@ -9,6 +9,58 @@ part of 'current_song_notifier.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
+@ProviderFor(CurrentQueue)
+final currentQueueProvider = CurrentQueueProvider._();
+
+final class CurrentQueueProvider
+    extends $NotifierProvider<CurrentQueue, List<SongModel>> {
+  CurrentQueueProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'currentQueueProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$currentQueueHash();
+
+  @$internal
+  @override
+  CurrentQueue create() => CurrentQueue();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<SongModel> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<List<SongModel>>(value),
+    );
+  }
+}
+
+String _$currentQueueHash() => r'e0a6a55169bad3ad7d95e54ceaf0b45ce9dbf734';
+
+abstract class _$CurrentQueue extends $Notifier<List<SongModel>> {
+  List<SongModel> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<List<SongModel>, List<SongModel>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<List<SongModel>, List<SongModel>>,
+              List<SongModel>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
 @ProviderFor(audioPlayerInstance)
 final audioPlayerInstanceProvider = AudioPlayerInstanceProvider._();
 
@@ -117,7 +169,7 @@ final class CurrentSongNotifierProvider
 }
 
 String _$currentSongNotifierHash() =>
-    r'd06f46d81ab2582f43fbe628a0b051932911217e';
+    r'22a8b28e5c66355f9cd6ee92f9d0a553014d4fef';
 
 abstract class _$CurrentSongNotifier extends $Notifier<SongModel?> {
   SongModel? build();

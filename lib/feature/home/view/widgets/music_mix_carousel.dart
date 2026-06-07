@@ -40,6 +40,7 @@ class _MusicMixCarouselState extends ConsumerState<MusicMixCarousel> {
           return GestureDetector(
             onTap: () {
               dev.log("tapped");
+              ref.read(currentQueueProvider.notifier).setQueue([]);
               ref.read(currentSongProvider.notifier).updateSong(song);
             },
             child: ClipRRect(

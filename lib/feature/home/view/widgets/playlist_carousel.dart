@@ -1,8 +1,11 @@
 import 'package:coverflow_carousel/coverflow_carousel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vibe/core/providers/current_song_notifier.dart';
 import 'package:vibe/core/theme/app_colors.dart';
 import 'package:vibe/feature/home/viewmodel/home_viewmodel.dart';
+import 'package:vibe/feature/music/view/pages/music_player.dart';
+import 'package:vibe/feature/music/view/widgets/player_route_transition.dart';
 
 class PlaylistCarousel extends ConsumerStatefulWidget {
   const PlaylistCarousel({super.key});
@@ -47,11 +50,22 @@ class _PlaylistCarouselState extends ConsumerState<PlaylistCarousel> {
               });
             },
             itemBuilder: (context, index) {
+              final playlist = playlists[index];
               return GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  if (playlist.songs.isNotEmpty) {
+                    ref.read(currentQueueProvider.notifier).setQueue(playlist.songs);
+                    ref.read(currentSongProvider.notifier).updateSong(playlist.songs.first);
+                    Navigator.of(context).push(
+                      PlayerRouteTransition(
+                        child: const MusicPlayer(),
+                      ),
+                    );
+                  }
+                },
                 child: ClipOval(
                   child: Image.asset(
-                    playlists[index].playlistThumbnail,
+                    playlist.playlistThumbnail,
                     width: 180,
                     height: 180,
                     fit: BoxFit.cover,

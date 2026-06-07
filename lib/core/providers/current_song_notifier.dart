@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'dart:developer' as developer;
 import 'package:just_audio/just_audio.dart';
@@ -5,8 +6,21 @@ import 'package:just_audio_background/just_audio_background.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vibe/core/utils.dart';
 import 'package:vibe/feature/home/model/song_model.dart';
+import 'package:vibe/feature/music/viewmodel/upload_viewmodel.dart';
 
 part 'current_song_notifier.g.dart';
+
+@Riverpod(keepAlive: true)
+class CurrentQueue extends _$CurrentQueue {
+  @override
+  List<SongModel> build() {
+    return [];
+  }
+
+  void setQueue(List<SongModel> queue) {
+    state = queue;
+  }
+}
 
 @Riverpod(keepAlive: true)
 AudioPlayer audioPlayerInstance(Ref ref) {
@@ -28,16 +42,27 @@ Future<Color> currentSongColor(Ref ref) async {
 
 @Riverpod(keepAlive: true)
 class CurrentSongNotifier extends _$CurrentSongNotifier {
+  StreamSubscription<PlayerState>? _playerStateSubscription;
+  String? _latestRequestedSongId;
+
   @override
   SongModel? build() {
+    ref.onDispose(() {
+      _playerStateSubscription?.cancel();
+    });
     return null;
   }
 
   void updateSong(SongModel song) async {
+    _latestRequestedSongId = song.id;
+    _playerStateSubscription?.cancel();
+    _playerStateSubscription = null;
+
     final player = ref.read(audioPlayerInstanceProvider);
 
     try {
       await player.stop();
+      if (_latestRequestedSongId != song.id) return;
 
       state = song;
 
@@ -52,17 +77,36 @@ class CurrentSongNotifier extends _$CurrentSongNotifier {
       );
 
       await player.setAudioSource(audioSource);
+      if (_latestRequestedSongId != song.id) return;
 
-      player.playerStateStream.listen((state) {
-        if (state.processingState == ProcessingState.completed) {
-          player.seek(Duration.zero);
-          player.pause();
+      _playerStateSubscription = player.playerStateStream.listen((playerState) {
+        if (playerState.processingState == ProcessingState.completed) {
+          _playerStateSubscription?.cancel();
+          _playerStateSubscription = null;
+          Future.microtask(() => _playNextSong());
         }
       });
       player.play();
     } catch (e, st) {
       developer.log('Audio player error', error: e, stackTrace: st);
-      state = null;
+      if (_latestRequestedSongId == song.id) {
+        state = null;
+      }
+    }
+  }
+
+  void _playNextSong() {
+    final songsAsync = ref.read(getAllSongsProvider);
+    final queue = ref.read(currentQueueProvider);
+    final songs = queue.isNotEmpty ? queue : (songsAsync.value ?? []);
+
+    final currentSong = state;
+    if (currentSong == null || songs.isEmpty) return;
+
+    final index = songs.indexWhere((s) => s.id == currentSong.id);
+    if (index != -1) {
+      final nextSong = songs[(index + 1) % songs.length];
+      updateSong(nextSong);
     }
   }
 

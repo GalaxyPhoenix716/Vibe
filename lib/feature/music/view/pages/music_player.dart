@@ -40,8 +40,9 @@ class _MusicPlayerState extends ConsumerState<MusicPlayer> {
 
     final positionAsync = ref.watch(currentSongPositionProvider);
     final songsAsync = ref.watch(getAllSongsProvider);
+    final queue = ref.watch(currentQueueProvider);
 
-    final songs = songsAsync.value ?? [];
+    final songs = queue.isNotEmpty ? queue : (songsAsync.value ?? []);
     final dominantColor = currentSongColorAsync.value ?? VibeColors.deepBlue;
 
     if (currentSong == null) {
