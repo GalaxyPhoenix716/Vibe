@@ -1,10 +1,9 @@
-import 'dart:developer' as dev;
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coverflow_carousel/coverflow_carousel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:precached_network_image/precached_network_image.dart';
 import 'package:vibe/core/providers/current_song_notifier.dart';
+import 'package:vibe/core/theme/app_colors.dart';
 import 'package:vibe/feature/home/model/song_model.dart';
 
 class MusicMixCarousel extends ConsumerStatefulWidget {
@@ -39,15 +38,24 @@ class _MusicMixCarouselState extends ConsumerState<MusicMixCarousel> {
           final song = widget.songs[index];
           return GestureDetector(
             onTap: () {
-              dev.log("tapped");
               ref.read(currentQueueProvider.notifier).setQueue([]);
               ref.read(currentSongProvider.notifier).updateSong(song);
             },
             child: ClipRRect(
               borderRadius: BorderRadius.circular(24),
-              child: CachedNetworkImage(
-                imageUrl: song.thumbnail_url,
+              child: PrecachedNetworkImage(
+                height: 180,
+                width: 180,
+                precache: true,
+                url: song.thumbnail_url,
                 fit: BoxFit.cover,
+                placeholder: (_, _) {
+                  return Container(
+                    width: 180,
+                    height: 180,
+                    color: VibeColors.deepBlue,
+                  );
+                },
               ),
             ),
           );

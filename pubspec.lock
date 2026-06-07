@@ -941,6 +941,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.7.0"
+  precached_network_image:
+    dependency: "direct main"
+    description:
+      name: precached_network_image
+      sha256: afbf58a8baad5cd0982300f654e5c3989c9f82a9231a00862db8cc6e8dd352ad
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.4.1"
   pub_semver:
     dependency: transitive
     description:
