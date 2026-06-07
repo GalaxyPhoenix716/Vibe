@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:coverflow_carousel/coverflow_carousel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,6 +21,15 @@ class MusicPlayer extends ConsumerStatefulWidget {
 
 class _MusicPlayerState extends ConsumerState<MusicPlayer> {
   bool _isFavorite = false;
+  late CoverflowCarouselController _carouselController;
+  int? _carouselPageIndex;
+  String? _lastSongId;
+
+  @override
+  void initState() {
+    super.initState();
+    _carouselController = CoverflowCarouselController();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +50,20 @@ class _MusicPlayerState extends ConsumerState<MusicPlayer> {
       );
     }
 
+    // Synchronize carousel index on external song changes (like next/prev buttons)
+    if (currentSong.id != _lastSongId) {
+      final index = songs.indexWhere((s) => s.id == currentSong.id);
+      if (index != -1) {
+        if (_lastSongId != null && index != _carouselPageIndex) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            _carouselController.animateTo(index);
+          });
+        }
+        _lastSongId = currentSong.id;
+        _carouselPageIndex = index;
+      }
+    }
+
     void skipNext() {
       if (songs.isEmpty) return;
       final index = songs.indexWhere((s) => s.id == currentSong.id);
@@ -54,7 +78,6 @@ class _MusicPlayerState extends ConsumerState<MusicPlayer> {
       final index = songs.indexWhere((s) => s.id == currentSong.id);
       if (index != -1) {
         final position = positionAsync.value ?? Duration.zero;
-        // Spotify style: if track has played for more than 3 seconds, restart it. Otherwise, go to prev.
         if (position.inSeconds > 3) {
           ref.read(audioPlayerInstanceProvider).seek(Duration.zero);
         } else {
@@ -93,10 +116,10 @@ class _MusicPlayerState extends ConsumerState<MusicPlayer> {
                           ),
                         ),
                       ),
-                      const Text(
+                      Text(
                         'NOW PLAYING',
                         style: TextStyle(
-                          color: VibeColors.greyText,
+                          color: VibeColors.white.withValues(alpha: 0.7),
                           fontFamily: 'SF Pro',
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
@@ -284,7 +307,7 @@ class _MusicPlayerState extends ConsumerState<MusicPlayer> {
               ),
             ),
           ),
-          
+
           LyricsBottomSheet(
             songName: currentSong.song_name,
             artist: currentSong.artist,
