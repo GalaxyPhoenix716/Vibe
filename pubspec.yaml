@@ -29,6 +29,7 @@ dependencies:
   coverflow_carousel: ^1.1.2
   flutter_launcher_icons: ^0.14.4
   smooth_sheets: ^1.0.2
+  just_audio_background: ^0.0.1-beta.17
 
 dev_dependencies:
   flutter_test:

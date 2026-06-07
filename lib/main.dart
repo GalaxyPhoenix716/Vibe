@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 import 'package:vibe/core/services/supabase_service.dart';
 import 'package:vibe/core/theme/theme.dart';
 import 'package:vibe/feature/auth/view/pages/auth_wrapper.dart';
@@ -13,6 +14,13 @@ void main() async {
 
   //initialize supabase
   await SupabaseService.init();
+
+  //just audio init
+  await JustAudioBackground.init(
+    androidNotificationChannelId: 'com.ryanheise.bg_demo.channel.audio',
+    androidNotificationChannelName: 'Audio playback',
+    androidNotificationOngoing: true,
+  );
 
   runApp(const ProviderScope(child: MyApp()));
 }

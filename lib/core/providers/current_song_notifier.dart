@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:developer' as developer;
 import 'package:just_audio/just_audio.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vibe/core/utils.dart';
 import 'package:vibe/feature/home/model/song_model.dart';
@@ -40,7 +41,16 @@ class CurrentSongNotifier extends _$CurrentSongNotifier {
 
       state = song;
 
-      final audioSource = AudioSource.uri(Uri.parse(song.song_url));
+      final audioSource = AudioSource.uri(
+        Uri.parse(song.song_url),
+        tag: MediaItem(
+          id: song.id,
+          title: song.song_name,
+          artist: song.artist,
+          artUri: Uri.parse(song.thumbnail_url),
+        ),
+      );
+
       await player.setAudioSource(audioSource);
 
       player.playerStateStream.listen((state) {
