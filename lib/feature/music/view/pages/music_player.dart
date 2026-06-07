@@ -31,7 +31,7 @@ class _MusicPlayerState extends ConsumerState<MusicPlayer> {
     final songsAsync = ref.watch(getAllSongsProvider);
 
     final songs = songsAsync.value ?? [];
-    final dominantColor = currentSongColorAsync.value ?? VibeColors.pink;
+    final dominantColor = currentSongColorAsync.value ?? VibeColors.deepBlue;
 
     if (currentSong == null) {
       return const Scaffold(
