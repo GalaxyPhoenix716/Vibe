@@ -7,6 +7,7 @@ import 'package:vibe/core/constants.dart';
 import 'package:vibe/core/providers/current_song_notifier.dart';
 import 'package:vibe/core/theme/app_colors.dart';
 import 'package:vibe/core/widgets/adaptive_background.dart';
+import 'package:vibe/feature/music/view/widgets/lyrics_bottom_sheet.dart';
 import 'package:vibe/feature/music/view/widgets/waveform_scrubber.dart';
 import 'package:vibe/feature/music/viewmodel/upload_viewmodel.dart';
 
@@ -64,7 +65,6 @@ class _MusicPlayerState extends ConsumerState<MusicPlayer> {
     }
 
     return Scaffold(
-      backgroundColor: Colors.transparent, // Allow adaptive background to show
       body: Stack(
         children: [
           AdaptiveBackground(dominantColor: dominantColor),
@@ -245,7 +245,7 @@ class _MusicPlayerState extends ConsumerState<MusicPlayer> {
                         icon: const Icon(
                           CupertinoIcons.backward_end_fill,
                           color: VibeColors.white,
-                          size: 32,
+                          size: 25,
                         ),
                       ),
                       const SizedBox(width: 40),
@@ -254,7 +254,7 @@ class _MusicPlayerState extends ConsumerState<MusicPlayer> {
                           ref.read(currentSongProvider.notifier).playPause();
                         },
                         child: CircleAvatar(
-                          backgroundColor: VibeColors.inactive.withValues(
+                          backgroundColor: VibeColors.white.withValues(
                             alpha: 0.3,
                           ),
                           radius: 30,
@@ -273,18 +273,22 @@ class _MusicPlayerState extends ConsumerState<MusicPlayer> {
                         icon: const Icon(
                           CupertinoIcons.forward_end_fill,
                           color: VibeColors.white,
-                          size: 32,
+                          size: 25,
                         ),
                       ),
                     ],
                   ),
 
-                  const Spacer(flex: 1),
-
-                  
+                  const Spacer(flex: 4),
                 ],
               ),
             ),
+          ),
+          
+          LyricsBottomSheet(
+            songName: currentSong.song_name,
+            artist: currentSong.artist,
+            dominantColor: dominantColor,
           ),
         ],
       ),
