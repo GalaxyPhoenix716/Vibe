@@ -42,6 +42,13 @@ class CurrentSongNotifier extends _$CurrentSongNotifier {
 
       final audioSource = AudioSource.uri(Uri.parse(song.song_url));
       await player.setAudioSource(audioSource);
+
+      player.playerStateStream.listen((state) {
+        if (state.processingState == ProcessingState.completed) {
+          player.seek(Duration.zero);
+          player.pause();
+        }
+      });
       player.play();
     } catch (e, st) {
       developer.log('Audio player error', error: e, stackTrace: st);
