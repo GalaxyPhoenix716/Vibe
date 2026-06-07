@@ -142,30 +142,62 @@ class _MusicPlayerState extends ConsumerState<MusicPlayer> {
                     ],
                   ),
 
-                  const Spacer(flex: 2),
-
-                  Hero(
-                    tag: 'music-player-art-${currentSong.id}',
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(24),
-                        boxShadow: [
-                          BoxShadow(
-                            color: dominantColor.withValues(alpha: 0.35),
-                            blurRadius: 35,
-                            offset: const Offset(0, 15),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.width,
+                    child: CoverflowCarousel.builder(
+                      itemCount: songs.isEmpty ? 1 : songs.length,
+                      itemWidth: MediaQuery.of(context).size.width * 0.82,
+                      itemHeight: MediaQuery.of(context).size.width * 0.82,
+                      initialPage: songs.isNotEmpty
+                          ? songs.indexWhere((s) => s.id == currentSong.id).clamp(0, songs.length - 1)
+                          : 0,
+                      controller: _carouselController,
+                      visibleItems: 1,
+                      nearCardSpacing: MediaQuery.of(context).size.width * 0.82,
+                      viewportFraction: 0.8,
+                      skewAngle: 0,
+                      onPageChanged: (index) {
+                        if (songs.isNotEmpty && index >= 0 && index < songs.length) {
+                          final song = songs[index];
+                          if (song.id != currentSong.id) {
+                            setState(() {
+                              _carouselPageIndex = index;
+                            });
+                            ref.read(currentSongProvider.notifier).updateSong(song);
+                          }
+                        }
+                      },
+                      itemBuilder: (context, index) {
+                        final song = songs.isNotEmpty ? songs[index] : currentSong;
+                        final isCurrentSong = song.id == currentSong.id;
+                        
+                        return Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(24),
+                            boxShadow: [
+                              BoxShadow(
+                                color: isCurrentSong 
+                                    ? dominantColor.withValues(alpha: 0.35) 
+                                    : Colors.black.withValues(alpha: 0.2),
+                                blurRadius: 35,
+                                offset: const Offset(0, 15),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(24),
-                        child: CachedNetworkImage(
-                          imageUrl: currentSong.thumbnail_url,
-                          width: MediaQuery.of(context).size.width * 0.82,
-                          height: MediaQuery.of(context).size.width * 0.82,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(24),
+                            child: Hero(
+                              tag: isCurrentSong 
+                                  ? 'music-player-art-${song.id}' 
+                                  : 'music-player-art-inactive-${song.id}',
+                              child: CachedNetworkImage(
+                                imageUrl: song.thumbnail_url,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ),
 
@@ -302,7 +334,7 @@ class _MusicPlayerState extends ConsumerState<MusicPlayer> {
                     ],
                   ),
 
-                  const Spacer(flex: 4),
+                  const Spacer(flex: 6),
                 ],
               ),
             ),
