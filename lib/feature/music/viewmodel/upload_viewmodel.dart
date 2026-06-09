@@ -133,6 +133,30 @@ class UploadViewModel extends _$UploadViewModel {
     }
   }
 
+  Future<bool> favSong({required String songId}) async {
+    try {
+      final repository = ref.read(musicRepositoryProvider);
+      final token = ref.read(authRepositoryProvider).token;
+
+      if (token == null) {
+        throw Exception('User not authenticated');
+      }
+
+      final result = await repository.favSong(songId: songId, token: token);
+
+      return result.fold(
+        (failure) {
+          throw Exception(failure.message);
+        },
+        (success) {
+          return success;
+        },
+      );
+    } finally {
+      state = state.copyWith(isUploading: false);
+    }
+  }
+
   void toggleTag(String tag) {
     final tags = [...state.selectedTags];
 

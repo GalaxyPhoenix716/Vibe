@@ -82,10 +82,14 @@ class MusicRepository {
     }
   }
 
-  Future<Either<AppFailure, bool>> favSong({required String token}) async {
+  Future<Either<AppFailure, bool>> favSong({
+    required String songId,
+    required String token,
+  }) async {
     try {
-      final res = await http.get(
+      final res = await http.post(
         Uri.parse('${ServerConstant.serverURL}/song/favourite'),
+        body: {'song_id': songId},
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
