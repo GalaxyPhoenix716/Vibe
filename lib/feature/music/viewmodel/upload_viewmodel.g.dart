@@ -48,6 +48,45 @@ final class GetAllSongsProvider
 
 String _$getAllSongsHash() => r'9aa423ebaf13fdfa07303a2b08e88f84aec755b6';
 
+@ProviderFor(getAllFavSongs)
+final getAllFavSongsProvider = GetAllFavSongsProvider._();
+
+final class GetAllFavSongsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<SongModel>>,
+          List<SongModel>,
+          FutureOr<List<SongModel>>
+        >
+    with $FutureModifier<List<SongModel>>, $FutureProvider<List<SongModel>> {
+  GetAllFavSongsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'getAllFavSongsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$getAllFavSongsHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<SongModel>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<SongModel>> create(Ref ref) {
+    return getAllFavSongs(ref);
+  }
+}
+
+String _$getAllFavSongsHash() => r'a7705255672f0264336c23290d7eb5de26541b8a';
+
 @ProviderFor(UploadViewModel)
 final uploadViewModelProvider = UploadViewModelProvider._();
 
@@ -80,7 +119,7 @@ final class UploadViewModelProvider
   }
 }
 
-String _$uploadViewModelHash() => r'4b82793063da7dfcfbb44620f2ef000afc7e54f5';
+String _$uploadViewModelHash() => r'c53838897b1634f2ab8d0fd8ff7e41405dc4385d';
 
 abstract class _$UploadViewModel extends $Notifier<UploadState> {
   UploadState build();
