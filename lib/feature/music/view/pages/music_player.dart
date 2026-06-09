@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:vibe/core/constants.dart';
 import 'package:vibe/core/providers/current_song_notifier.dart';
+import 'package:vibe/core/providers/current_user_notifier.dart';
 import 'package:vibe/core/theme/app_colors.dart';
 import 'package:vibe/core/widgets/adaptive_background.dart';
 import 'package:vibe/feature/music/view/widgets/lyrics_bottom_sheet.dart';
@@ -33,6 +34,9 @@ class _MusicPlayerState extends ConsumerState<MusicPlayer> {
 
   @override
   Widget build(BuildContext context) {
+    final userFavourites = ref.watch(
+      currentUserProvider.select((data) => data!.favSongs),
+    );
     final currentSong = ref.watch(currentSongProvider);
     final currentSongColorAsync = ref.watch(currentSongColorProvider);
     final isPlayingAsync = ref.watch(isPlayingProvider);
@@ -150,7 +154,9 @@ class _MusicPlayerState extends ConsumerState<MusicPlayer> {
                       itemWidth: MediaQuery.of(context).size.width * 0.82,
                       itemHeight: MediaQuery.of(context).size.width * 0.82,
                       initialPage: songs.isNotEmpty
-                          ? songs.indexWhere((s) => s.id == currentSong.id).clamp(0, songs.length - 1)
+                          ? songs
+                                .indexWhere((s) => s.id == currentSong.id)
+                                .clamp(0, songs.length - 1)
                           : 0,
                       controller: _carouselController,
                       visibleItems: 1,
@@ -158,27 +164,33 @@ class _MusicPlayerState extends ConsumerState<MusicPlayer> {
                       viewportFraction: 0.8,
                       skewAngle: 0,
                       onPageChanged: (index) {
-                        if (songs.isNotEmpty && index >= 0 && index < songs.length) {
+                        if (songs.isNotEmpty &&
+                            index >= 0 &&
+                            index < songs.length) {
                           final song = songs[index];
                           if (song.id != currentSong.id) {
                             setState(() {
                               _carouselPageIndex = index;
                             });
-                            ref.read(currentSongProvider.notifier).updateSong(song);
+                            ref
+                                .read(currentSongProvider.notifier)
+                                .updateSong(song);
                           }
                         }
                       },
                       itemBuilder: (context, index) {
-                        final song = songs.isNotEmpty ? songs[index] : currentSong;
+                        final song = songs.isNotEmpty
+                            ? songs[index]
+                            : currentSong;
                         final isCurrentSong = song.id == currentSong.id;
-                        
+
                         return Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(24),
                             boxShadow: [
                               BoxShadow(
-                                color: isCurrentSong 
-                                    ? dominantColor.withValues(alpha: 0.35) 
+                                color: isCurrentSong
+                                    ? dominantColor.withValues(alpha: 0.35)
                                     : Colors.black.withValues(alpha: 0.2),
                                 blurRadius: 35,
                                 offset: const Offset(0, 15),
@@ -188,8 +200,8 @@ class _MusicPlayerState extends ConsumerState<MusicPlayer> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(24),
                             child: Hero(
-                              tag: isCurrentSong 
-                                  ? 'music-player-art-${song.id}' 
+                              tag: isCurrentSong
+                                  ? 'music-player-art-${song.id}'
                                   : 'music-player-art-inactive-${song.id}',
                               child: CachedNetworkImage(
                                 imageUrl: song.thumbnail_url,
@@ -265,15 +277,18 @@ class _MusicPlayerState extends ConsumerState<MusicPlayer> {
                         ),
                       ),
                       IconButton(
-                        onPressed: () {
-                          setState(() {
-                            _isFavorite = !_isFavorite;
-                          });
+                        onPressed: () async {
+                          await ref
+                              .read(uploadViewModelProvider.notifier)
+                              .favSong(songId: currentSong.id);
                         },
                         icon: Icon(
-                          _isFavorite
-                              ? CupertinoIcons.heart_fill
-                              : CupertinoIcons.heart,
+                          userFavourites
+                                  .where((fav) => fav.songId == currentSong.id)
+                                  .toList()
+                                  .isEmpty
+                              ? CupertinoIcons.heart
+                              : CupertinoIcons.heart_fill,
                           color: _isFavorite
                               ? VibeColors.pink
                               : VibeColors.white.withValues(alpha: 0.6),

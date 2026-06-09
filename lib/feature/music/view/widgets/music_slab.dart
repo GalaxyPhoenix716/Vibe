@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vibe/core/providers/current_song_notifier.dart';
+import 'package:vibe/core/providers/current_user_notifier.dart';
 import 'package:vibe/core/theme/app_colors.dart';
 import 'package:vibe/feature/music/view/pages/music_player.dart';
 import 'package:vibe/feature/music/view/widgets/player_route_transition.dart';
@@ -18,6 +19,9 @@ class MusicSlab extends ConsumerWidget {
     final isPlayingAsync = ref.watch(isPlayingProvider);
     final isPlaying = isPlayingAsync.value ?? false;
     final durationAsync = ref.watch(currentSongDurationProvider);
+    final userFavourites = ref.watch(
+      currentUserProvider.select((data) => data!.favSongs),
+    );
 
     final duration = durationAsync.value ?? Duration.zero;
 
@@ -87,12 +91,19 @@ class MusicSlab extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       IconButton(
-                        onPressed: () async{
+                        onPressed: () async {
                           await ref
                               .read(uploadViewModelProvider.notifier)
                               .favSong(songId: currentSong.id);
                         },
-                        icon: const Icon(CupertinoIcons.heart),
+                        icon: Icon(
+                          userFavourites
+                                  .where((fav) => fav.songId == currentSong.id)
+                                  .toList()
+                                  .isEmpty
+                              ? CupertinoIcons.heart
+                              : CupertinoIcons.heart_fill,
+                        ),
                         color: VibeColors.white,
                       ),
                       const SizedBox(width: 5),
