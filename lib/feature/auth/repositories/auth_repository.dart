@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../core/services/api_service.dart';
-import '../model/user_model.dart';
+import '../../../core/models/user_model.dart';
 
 class AuthRepository {
   AuthRepository();
