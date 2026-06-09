@@ -21,7 +21,6 @@ class MusicPlayer extends ConsumerStatefulWidget {
 }
 
 class _MusicPlayerState extends ConsumerState<MusicPlayer> {
-  bool _isFavorite = false;
   late CoverflowCarouselController _carouselController;
   int? _carouselPageIndex;
   String? _lastSongId;
@@ -282,17 +281,18 @@ class _MusicPlayerState extends ConsumerState<MusicPlayer> {
                               .read(uploadViewModelProvider.notifier)
                               .favSong(songId: currentSong.id);
                         },
-                        icon: Icon(
-                          userFavourites
-                                  .where((fav) => fav.songId == currentSong.id)
-                                  .toList()
-                                  .isEmpty
-                              ? CupertinoIcons.heart
-                              : CupertinoIcons.heart_fill,
-                          color: _isFavorite
-                              ? VibeColors.pink
-                              : VibeColors.white.withValues(alpha: 0.6),
-                          size: 22,
+                        icon: Builder(
+                          builder: (context) {
+                            final isFav = userFavourites
+                                .any((fav) => fav.songId == currentSong.id);
+                            return Icon(
+                              isFav ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
+                              color: isFav
+                                  ? VibeColors.pink
+                                  : VibeColors.white.withValues(alpha: 0.6),
+                              size: 22,
+                            );
+                          },
                         ),
                       ),
                     ],

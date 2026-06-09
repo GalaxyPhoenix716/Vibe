@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:vibe/core/providers/current_user_notifier.dart';
 import 'package:vibe/core/theme/app_colors.dart';
 import 'package:vibe/core/utils.dart';
 import 'package:vibe/feature/auth/viewmodel/auth_viewmodel.dart';
 import 'package:vibe/feature/home/model/song_model.dart';
+import 'package:vibe/feature/music/model/fav_song_model.dart';
 import 'package:vibe/feature/music/repositories/music_repository.dart';
 import '../model/upload_state.dart';
 
@@ -166,12 +168,41 @@ class UploadViewModel extends _$UploadViewModel {
           throw Exception(failure.message);
         },
         (success) {
-          return success;
+          return _favSongSuccess(success, songId);
         },
       );
     } finally {
       state = state.copyWith(isUploading: false);
     }
+  }
+
+  bool _favSongSuccess(bool isFav, String songId) {
+    final userNotifier = ref.read(currentUserProvider.notifier);
+    if (isFav) {
+      userNotifier.addUser(
+        ref
+            .read(currentUserProvider)!
+            .copyWith(
+              favSongs: [
+                ...ref.read(currentUserProvider)!.favSongs,
+                FavSongModel(id: '', songId: songId, userId: ''),
+              ],
+            ),
+      );
+    } else {
+      userNotifier.addUser(
+        ref
+            .read(currentUserProvider)!
+            .copyWith(
+              favSongs: ref
+                  .read(currentUserProvider)!
+                  .favSongs
+                  .where((fav) => fav.songId != songId)
+                  .toList(),
+            ),
+      );
+    }
+    return isFav;
   }
 
   void toggleTag(String tag) {
