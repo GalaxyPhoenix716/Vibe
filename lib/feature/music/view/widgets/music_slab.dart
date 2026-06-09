@@ -6,6 +6,7 @@ import 'package:vibe/core/providers/current_song_notifier.dart';
 import 'package:vibe/core/theme/app_colors.dart';
 import 'package:vibe/feature/music/view/pages/music_player.dart';
 import 'package:vibe/feature/music/view/widgets/player_route_transition.dart';
+import 'package:vibe/feature/music/viewmodel/upload_viewmodel.dart';
 
 class MusicSlab extends ConsumerWidget {
   const MusicSlab({super.key});
@@ -86,7 +87,11 @@ class MusicSlab extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () async{
+                          await ref
+                              .read(uploadViewModelProvider.notifier)
+                              .favSong(songId: currentSong.id);
+                        },
                         icon: const Icon(CupertinoIcons.heart),
                         color: VibeColors.white,
                       ),

@@ -82,6 +82,37 @@ class MusicRepository {
     }
   }
 
+  Future<Either<AppFailure, List<SongModel>>> getAllFavSongs({
+    required String token,
+  }) async {
+    try {
+      final res = await http.get(
+        Uri.parse('${ServerConstant.serverURL}/song/list-favourites'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+      var resBodyMap = jsonDecode(res.body);
+
+      if (res.statusCode != 200) {
+        resBodyMap = resBodyMap as Map<String, dynamic>;
+        return Left(AppFailure(resBodyMap['detail']));
+      }
+
+      resBodyMap = resBodyMap as List;
+      List<SongModel> songs = [];
+
+      for (final map in resBodyMap) {
+        songs.add(SongModel.fromMap(map['song']));
+      }
+
+      return Right(songs);
+    } catch (e) {
+      return Left(AppFailure(e.toString()));
+    }
+  }
+
   Future<Either<AppFailure, bool>> favSong({
     required String songId,
     required String token,
@@ -89,7 +120,7 @@ class MusicRepository {
     try {
       final res = await http.post(
         Uri.parse('${ServerConstant.serverURL}/song/favourite'),
-        body: {'song_id': songId},
+        body: jsonEncode({'song_id': songId}),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',

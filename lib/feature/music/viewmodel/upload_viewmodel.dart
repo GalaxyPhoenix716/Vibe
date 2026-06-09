@@ -28,6 +28,23 @@ Future<List<SongModel>> getAllSongs(Ref ref) async {
 }
 
 @riverpod
+Future<List<SongModel>> getAllFavSongs(Ref ref) async {
+  final token = ref.read(authRepositoryProvider).token!;
+  final res = await ref
+      .watch(musicRepositoryProvider)
+      .getAllFavSongs(token: token);
+
+  return res.fold(
+    (failure) {
+      throw Exception(failure.message);
+    },
+    (success) {
+      return success;
+    },
+  );
+}
+
+@riverpod
 class UploadViewModel extends _$UploadViewModel {
   @override
   UploadState build() {
