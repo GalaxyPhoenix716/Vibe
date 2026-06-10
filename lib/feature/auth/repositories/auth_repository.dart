@@ -22,9 +22,10 @@ class AuthRepository {
       return null;
     }
 
-    final response = await ApiService.login(token);
+    await ApiService.login(token);
+    final response = await ApiService.getCurrentUserData(token);
 
-    return UserModel.fromJson(response['user']);
+    return UserModel.fromJson(response);
   }
 
   bool get isLoggedIn => supabase.auth.currentSession != null;

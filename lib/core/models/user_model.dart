@@ -45,7 +45,13 @@ class UserModel {
       id: json['id'].toString(),
       name: json['name'].toString(),
       email: json['email'].toString(),
-      favSongs: [],
+      favSongs: json['favourites'] == null
+          ? []
+          : List<FavSongModel>.from(
+              (json['favourites'] as List).map(
+                (x) => FavSongModel.fromMap(x as Map<String, dynamic>),
+              ),
+            ),
     );
   }
 

@@ -11,4 +11,13 @@ class ApiService {
 
     return jsonDecode(response.body);
   }
+
+  static Future<Map<String, dynamic>> getCurrentUserData(String token) async {
+    final response = await http.get(
+      Uri.parse('${ServerConstant.serverURL}/auth/'),
+      headers: {"Authorization": "Bearer $token"},
+    );
+
+    return jsonDecode(response.body);
+  }
 }
