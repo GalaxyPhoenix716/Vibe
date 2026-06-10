@@ -6,7 +6,7 @@ import 'package:vibe/core/providers/current_song_notifier.dart';
 import 'package:vibe/core/providers/current_user_notifier.dart';
 import 'package:vibe/core/providers/recently_played_provider.dart';
 import 'package:vibe/core/theme/app_colors.dart';
-import 'package:vibe/feature/auth/viewmodel/auth_viewmodel.dart';
+import 'package:vibe/core/widgets/home_appbar.dart';
 import 'package:vibe/feature/home/model/song_model.dart';
 import 'package:vibe/feature/music/viewmodel/upload_viewmodel.dart';
 import 'package:vibe/feature/search/viewmodel/search_viewmodel.dart';
@@ -62,136 +62,97 @@ class _SearchPageState extends ConsumerState<SearchPage> {
     final userFavourites = ref.watch(
       currentUserProvider.select((data) => data?.favSongs ?? []),
     );
-    final userProfile = ref.watch(authViewModelProvider).value;
 
     return Scaffold(
       backgroundColor: VibeColors.backgroundColor,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 10),
+      body: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
+        slivers: [
+          // Global App Bar
+          const HomeAppBar(),
 
-              // Header Row (Mockup: Star icon, Audio visualizer, Avatar)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          // Search Box Input
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            sliver: SliverToBoxAdapter(
+              child: Column(
                 children: [
-                  const Icon(
-                    CupertinoIcons.sparkles,
-                    color: VibeColors.brightPurple,
-                    size: 28,
-                  ),
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(6),
-                        decoration: BoxDecoration(
-                          color: VibeColors.white.withValues(alpha: 0.08),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          CupertinoIcons.waveform,
-                          color: VibeColors.white,
-                          size: 20,
-                        ),
+                  const SizedBox(height: 10),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: VibeColors.white.withValues(alpha: 0.06),
+                      borderRadius: BorderRadius.circular(18),
+                      border: Border.all(
+                        color: VibeColors.white.withValues(alpha: 0.05),
+                        width: 1,
                       ),
-                      const SizedBox(width: 12),
-                      CircleAvatar(
-                        radius: 18,
-                        backgroundColor: VibeColors.brightPurple,
-                        child: Text(
-                          userProfile?.name.isNotEmpty == true
-                              ? userProfile!.name.substring(0, 1).toUpperCase()
-                              : 'U',
-                          style: const TextStyle(
-                            color: VibeColors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-
-              // Search Text Field
-              Container(
-                decoration: BoxDecoration(
-                  color: VibeColors.white.withValues(alpha: 0.06),
-                  borderRadius: BorderRadius.circular(18),
-                  border: Border.all(
-                    color: VibeColors.white.withValues(alpha: 0.05),
-                    width: 1,
-                  ),
-                ),
-                child: TextField(
-                  controller: _searchController,
-                  style: const TextStyle(color: VibeColors.white),
-                  cursorColor: VibeColors.brightPurple,
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(
-                      CupertinoIcons.search,
-                      color: VibeColors.inactive,
                     ),
-                    suffixIcon: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (searchQuery.isNotEmpty)
-                          IconButton(
-                            icon: const Icon(
-                              CupertinoIcons.clear_circled_solid,
-                              color: VibeColors.inactive,
-                            ),
-                            onPressed: () {
-                              _searchController.clear();
-                              ref.read(searchQueryProvider.notifier).clearQuery();
-                            },
-                          ),
-                        const Icon(
-                          CupertinoIcons.mic_fill,
+                    child: TextField(
+                      controller: _searchController,
+                      style: const TextStyle(color: VibeColors.white),
+                      cursorColor: VibeColors.brightPurple,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(
+                          CupertinoIcons.search,
                           color: VibeColors.inactive,
                         ),
-                        const SizedBox(width: 15),
-                      ],
+                        suffixIcon: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (searchQuery.isNotEmpty)
+                              IconButton(
+                                icon: const Icon(
+                                  CupertinoIcons.clear_circled_solid,
+                                  color: VibeColors.inactive,
+                                ),
+                                onPressed: () {
+                                  _searchController.clear();
+                                  ref.read(searchQueryProvider.notifier).clearQuery();
+                                },
+                              ),
+                            const Icon(
+                              CupertinoIcons.mic_fill,
+                              color: VibeColors.inactive,
+                            ),
+                            const SizedBox(width: 15),
+                          ],
+                        ),
+                        hintText: "Search",
+                        hintStyle: const TextStyle(
+                          color: VibeColors.inactive,
+                          fontFamily: 'SF Pro',
+                        ),
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.symmetric(vertical: 14),
+                      ),
+                      onChanged: (val) {
+                        ref.read(searchQueryProvider.notifier).updateQuery(val);
+                      },
                     ),
-                    hintText: "Search",
-                    hintStyle: const TextStyle(
-                      color: VibeColors.inactive,
-                      fontFamily: 'SF Pro',
-                    ),
-                    border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(vertical: 14),
                   ),
-                  onChanged: (val) {
-                    ref.read(searchQueryProvider.notifier).updateQuery(val);
-                  },
-                ),
+                  const SizedBox(height: 25),
+                ],
               ),
-              const SizedBox(height: 25),
-
-              // Dynamic View States
-              Expanded(
-                child: searchQuery.isEmpty
-                    ? _buildBrowseView(recentlyPlayed, userFavourites)
-                    : _buildSearchResultsView(searchQuery, userFavourites),
-              ),
-            ],
+            ),
           ),
-        ),
+
+          // Dynamic View States as Slivers
+          if (searchQuery.isEmpty)
+            ..._buildBrowseViewSlivers(recentlyPlayed, userFavourites)
+          else
+            _buildSearchResultsViewSliver(searchQuery, userFavourites),
+        ],
       ),
     );
   }
 
-  // View shown when search query is empty (Explore + Recently Played)
-  Widget _buildBrowseView(List<SongModel> recentlyPlayed, List<dynamic> userFavourites) {
-    return CustomScrollView(
-      physics: const BouncingScrollPhysics(),
-      slivers: [
-        // Explore section heading
-        const SliverToBoxAdapter(
+  // Slivers for when search query is empty (Explore + Recently Played)
+  List<Widget> _buildBrowseViewSlivers(List<SongModel> recentlyPlayed, List<dynamic> userFavourites) {
+    return [
+      // Explore section heading
+      const SliverPadding(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        sliver: SliverToBoxAdapter(
           child: Padding(
             padding: EdgeInsets.only(bottom: 15),
             child: Text(
@@ -205,9 +166,12 @@ class _SearchPageState extends ConsumerState<SearchPage> {
             ),
           ),
         ),
+      ),
 
-        // Staggered Asymmetric Grid using standard Row/Column
-        SliverToBoxAdapter(
+      // Staggered Asymmetric Grid using standard Row/Column
+      SliverPadding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        sliver: SliverToBoxAdapter(
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -235,12 +199,15 @@ class _SearchPageState extends ConsumerState<SearchPage> {
             ],
           ),
         ),
+      ),
 
-        const SliverToBoxAdapter(child: SizedBox(height: 30)),
+      const SliverToBoxAdapter(child: SizedBox(height: 30)),
 
-        // Recently Played Heading
-        if (recentlyPlayed.isNotEmpty)
-          SliverToBoxAdapter(
+      // Recently Played Heading
+      if (recentlyPlayed.isNotEmpty)
+        SliverPadding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          sliver: SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.only(bottom: 15),
               child: Row(
@@ -267,10 +234,13 @@ class _SearchPageState extends ConsumerState<SearchPage> {
               ),
             ),
           ),
+        ),
 
-        // Recently Played list
-        if (recentlyPlayed.isNotEmpty)
-          SliverList(
+      // Recently Played list
+      if (recentlyPlayed.isNotEmpty)
+        SliverPadding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          sliver: SliverList(
             delegate: SliverChildBuilderDelegate(
               (context, index) {
                 final song = recentlyPlayed[index];
@@ -279,10 +249,10 @@ class _SearchPageState extends ConsumerState<SearchPage> {
               childCount: recentlyPlayed.length > 5 ? 5 : recentlyPlayed.length,
             ),
           ),
+        ),
 
-        const SliverToBoxAdapter(child: SizedBox(height: 100)),
-      ],
-    );
+      const SliverToBoxAdapter(child: SizedBox(height: 100)),
+    ];
   }
 
   // Asymmetric Genre Card Builder
@@ -482,54 +452,67 @@ class _SearchPageState extends ConsumerState<SearchPage> {
     );
   }
 
-  // Active search query results state view
-  Widget _buildSearchResultsView(String query, List<dynamic> userFavourites) {
+  // Active search query results state view (as a Sliver)
+  Widget _buildSearchResultsViewSliver(String query, List<dynamic> userFavourites) {
     final resultsAsync = ref.watch(searchSongsProvider(query: query));
 
     return resultsAsync.when(
       data: (results) {
         if (results.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  CupertinoIcons.music_note_list,
-                  color: VibeColors.white.withValues(alpha: 0.2),
-                  size: 60,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  "No songs found for '$query'",
-                  style: TextStyle(
-                    fontFamily: 'SF Pro',
-                    color: VibeColors.white.withValues(alpha: 0.4),
-                    fontSize: 16,
+          return SliverFillRemaining(
+            hasScrollBody: false,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    CupertinoIcons.music_note_list,
+                    color: VibeColors.white.withValues(alpha: 0.2),
+                    size: 60,
                   ),
-                ),
-              ],
+                  const SizedBox(height: 16),
+                  Text(
+                    "No songs found for '$query'",
+                    style: TextStyle(
+                      fontFamily: 'SF Pro',
+                      color: VibeColors.white.withValues(alpha: 0.4),
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         }
 
-        return ListView.builder(
-          physics: const BouncingScrollPhysics(),
-          itemCount: results.length,
-          itemBuilder: (context, index) {
-            final song = results[index];
-            return _buildSongTile(song, results, userFavourites);
-          },
+        return SliverPadding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          sliver: SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                final song = results[index];
+                return _buildSongTile(song, results, userFavourites);
+              },
+              childCount: results.length,
+            ),
+          ),
         );
       },
-      loading: () => const Center(
-        child: CircularProgressIndicator(
-          color: VibeColors.brightPurple,
+      loading: () => const SliverFillRemaining(
+        hasScrollBody: false,
+        child: Center(
+          child: CircularProgressIndicator(
+            color: VibeColors.brightPurple,
+          ),
         ),
       ),
-      error: (err, stack) => Center(
-        child: Text(
-          "Error loading results: $err",
-          style: const TextStyle(color: VibeColors.error),
+      error: (err, stack) => SliverFillRemaining(
+        hasScrollBody: false,
+        child: Center(
+          child: Text(
+            "Error loading results: $err",
+            style: const TextStyle(color: VibeColors.error),
+          ),
         ),
       ),
     );

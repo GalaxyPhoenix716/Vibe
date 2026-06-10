@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vibe/core/constants.dart';
 import 'package:vibe/core/theme/app_colors.dart';
 import 'package:vibe/feature/auth/viewmodel/auth_viewmodel.dart';
-import 'package:vibe/feature/home/view/widgets/home_appbar.dart';
+import 'package:vibe/core/widgets/home_appbar.dart';
 import 'package:vibe/feature/home/view/widgets/music_mix_carousel.dart';
 import 'package:vibe/feature/home/view/widgets/playlist_carousel.dart';
 import 'package:vibe/feature/home/view/widgets/user_header.dart';
