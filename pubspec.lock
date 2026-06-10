@@ -309,10 +309,10 @@ packages:
     dependency: "direct main"
     description:
       name: coverflow_carousel
-      sha256: "4b38b00270b4c8d9c1b897c74a9c85d2dbd3911d7b311d99cff3909ca144c0e0"
+      sha256: e64afb9dc6e6ea19ffd12d6e54763c2f3363b06c78a7698f9bd5c65c66630df2
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.2"
+    version: "1.2.0"
   cross_file:
     dependency: transitive
     description:

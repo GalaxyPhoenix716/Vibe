@@ -1,4 +1,5 @@
 import 'package:coverflow_carousel/coverflow_carousel.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vibe/core/providers/current_song_notifier.dart';
@@ -49,18 +50,49 @@ class _PlaylistCarouselState extends ConsumerState<PlaylistCarousel> {
                 _currentIndex = index;
               });
             },
+            centerOverlayBuilder: (context, index) {
+              final playlist = playlists[index];
+              return Align(
+                alignment: Alignment.center,
+                child: GestureDetector(
+                  onTap: () {
+                    if (playlist.songs.isNotEmpty) {
+                      ref
+                          .read(currentQueueProvider.notifier)
+                          .setQueue(playlist.songs);
+                      ref
+                          .read(currentSongProvider.notifier)
+                          .updateSong(playlist.songs.first);
+                      Navigator.of(
+                        context,
+                      ).push(PlayerRouteTransition(child: const MusicPlayer()));
+                    }
+                  },
+                  child: CircleAvatar(
+                    radius: 27,
+                    backgroundColor: VibeColors.white,
+                    child: Icon(
+                      CupertinoIcons.play_fill,
+                      color: VibeColors.backgroundColor,
+                    ),
+                  ),
+                ),
+              );
+            },
             itemBuilder: (context, index) {
               final playlist = playlists[index];
               return GestureDetector(
                 onTap: () {
                   if (playlist.songs.isNotEmpty) {
-                    ref.read(currentQueueProvider.notifier).setQueue(playlist.songs);
-                    ref.read(currentSongProvider.notifier).updateSong(playlist.songs.first);
-                    Navigator.of(context).push(
-                      PlayerRouteTransition(
-                        child: const MusicPlayer(),
-                      ),
-                    );
+                    ref
+                        .read(currentQueueProvider.notifier)
+                        .setQueue(playlist.songs);
+                    ref
+                        .read(currentSongProvider.notifier)
+                        .updateSong(playlist.songs.first);
+                    Navigator.of(
+                      context,
+                    ).push(PlayerRouteTransition(child: const MusicPlayer()));
                   }
                 },
                 child: ClipOval(

@@ -1,4 +1,5 @@
 import 'package:coverflow_carousel/coverflow_carousel.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:precached_network_image/precached_network_image.dart';
@@ -34,6 +35,31 @@ class _MusicMixCarouselState extends ConsumerState<MusicMixCarousel> {
         entryAnimation: CoverflowEntryAnimation.spacingExpand,
         entryAnimationDuration: const Duration(milliseconds: 1000),
         entryAnimationCurve: Curves.easeOutBack,
+        centerOverlayBuilder: (context, index) {
+          final song = widget.songs[index];
+          return Positioned(
+            bottom: -30,
+            right: 62,
+            child: GestureDetector(
+              onTap: () {
+                ref.read(currentQueueProvider.notifier).setQueue([]);
+                ref.read(currentSongProvider.notifier).updateSong(song);
+              },
+              child: CircleAvatar(
+                radius: 30,
+                backgroundColor: VibeColors.backgroundColor,
+                child: CircleAvatar(
+                  radius: 27,
+                  backgroundColor: VibeColors.white,
+                  child: Icon(
+                    CupertinoIcons.play_fill,
+                    color: VibeColors.backgroundColor,
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
         itemBuilder: (context, index) {
           final song = widget.songs[index];
           return GestureDetector(

@@ -36,7 +36,7 @@ class HomePage extends ConsumerWidget {
     
                       MusicMixCarousel(songs: songs),
     
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 30),
     
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
