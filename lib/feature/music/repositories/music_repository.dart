@@ -138,4 +138,36 @@ class MusicRepository {
       return Left(AppFailure(e.toString()));
     }
   }
+
+  Future<Either<AppFailure, List<SongModel>>> searchSongs({
+    required String query,
+    required String token,
+  }) async {
+    try {
+      final res = await http.get(
+        Uri.parse('${ServerConstant.serverURL}/song/search?q=${Uri.encodeComponent(query)}'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+      var resBodyMap = jsonDecode(res.body);
+
+      if (res.statusCode != 200) {
+        resBodyMap = resBodyMap as Map<String, dynamic>;
+        return Left(AppFailure(resBodyMap['detail'] ?? 'Search failed'));
+      }
+
+      resBodyMap = resBodyMap as List;
+      List<SongModel> songs = [];
+
+      for (final map in resBodyMap) {
+        songs.add(SongModel.fromMap(map));
+      }
+
+      return Right(songs);
+    } catch (e) {
+      return Left(AppFailure(e.toString()));
+    }
+  }
 }

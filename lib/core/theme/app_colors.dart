@@ -13,4 +13,12 @@ class VibeColors {
   static const Color brightPurple = Color(0xFFF156FE);
   static const Color deepBlue = Color(0xFF932EF8);
   static const Color pink = Color(0xFFEB0076);
+
+  // Search categories gradient colors
+  static const Color cyan = Color(0xFF00C6FF);
+  static const Color electricBlue = Color(0xFF0072FF);
+  static const Color rosePink = Color(0xFFFE568C);
+  static const Color darkOrange = Color(0xFFFF6D00);
+  static const Color lightOrange = Color(0xFFFFAB40);
+  static const Color error = Colors.red;
 }

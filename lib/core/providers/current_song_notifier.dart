@@ -4,6 +4,7 @@ import 'dart:developer' as developer;
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:vibe/core/providers/recently_played_provider.dart';
 import 'package:vibe/core/utils.dart';
 import 'package:vibe/feature/home/model/song_model.dart';
 import 'package:vibe/feature/music/viewmodel/upload_viewmodel.dart';
@@ -65,6 +66,7 @@ class CurrentSongNotifier extends _$CurrentSongNotifier {
       if (_latestRequestedSongId != song.id) return;
 
       state = song;
+      ref.read(recentlyPlayedProvider.notifier).addSong(song);
 
       final audioSource = AudioSource.uri(
         Uri.parse(song.song_url),
