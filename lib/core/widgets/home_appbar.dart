@@ -8,6 +8,8 @@ class HomeAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverAppBar(
       backgroundColor: VibeColors.backgroundColor,
+      surfaceTintColor: VibeColors.backgroundColor,
+      pinned: true,
       leading: CircleAvatar(
         backgroundColor: Colors.transparent,
         child: Image.asset('lib/core/icons/logo_transparent.png', height: 40),

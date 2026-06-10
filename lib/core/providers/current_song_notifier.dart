@@ -121,6 +121,15 @@ class CurrentSongNotifier extends _$CurrentSongNotifier {
       player.play();
     }
   }
+
+  void stopSong() async {
+    _latestRequestedSongId = null;
+    _playerStateSubscription?.cancel();
+    _playerStateSubscription = null;
+    final player = ref.read(audioPlayerInstanceProvider);
+    await player.stop();
+    state = null;
+  }
 }
 
 @riverpod
