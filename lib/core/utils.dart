@@ -61,11 +61,15 @@ Future<File?> pickAudio() async {
     final filePickerRes = await FilePicker.pickFiles(type: FileType.audio);
 
     if (filePickerRes != null) {
-      return File(filePickerRes.files.first.xFile.path);
+      final path = filePickerRes.files.first.path;
+      if (path != null) {
+        return File(path);
+      }
     }
 
     return null;
   } catch (e) {
+    debugPrint('Error picking audio: $e');
     return null;
   }
 }
@@ -75,11 +79,15 @@ Future<File?> pickImage() async {
     final filePickerRes = await FilePicker.pickFiles(type: FileType.image);
 
     if (filePickerRes != null) {
-      return File(filePickerRes.files.first.xFile.path);
+      final path = filePickerRes.files.first.path;
+      if (path != null) {
+        return File(path);
+      }
     }
 
     return null;
   } catch (e) {
+    debugPrint('Error picking image: $e');
     return null;
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:just_audio/just_audio.dart';
+import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vibe/core/providers/current_user_notifier.dart';
 import 'package:vibe/core/theme/app_colors.dart';
@@ -75,16 +75,17 @@ class UploadViewModel extends _$UploadViewModel {
       return;
     }
 
-    final player = AudioPlayer();
-    await player.setFilePath(audio.path);
-    final duration = player.duration;
+    final player = PlayerController();
+    await player.preparePlayer(path: audio.path, shouldExtractWaveform: false);
+    final durationMs = await player.getDuration(DurationType.max);
+    final duration = Duration(milliseconds: durationMs);
 
     state = state.copyWith(
       audioFile: () => audio,
       audioDuration: () => duration,
     );
 
-    await player.dispose();
+    player.dispose();
   }
 
   void removeCoverImage() {
